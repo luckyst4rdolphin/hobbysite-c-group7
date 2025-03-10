@@ -1,12 +1,14 @@
 from django.shortcuts import render
-from django.views.generic import ListView
-from django.views.generic import DetailView
-from blog.models import ArticleCategory, Article
+from django.views.generic import ListView, DetailView
+from blog.models import Article
 
-class ArticleCategoryListView(ListView):
-    context_object_name = "categories"
-    queryset = ArticleCategory.objects.all().order_by('name')
-    template_name = 'article_category_list.html'
+class ArticleListView(ListView):
+    context_object_name = "articles"
+    queryset = Article.objects.all().order_by('-created_on')
+    template_name = 'article_list.html'
 
-
+class ArticleDetailView(DetailView):
+    context_object_name = "article"
+    model = Article
+    template_name = 'article.html'
 
