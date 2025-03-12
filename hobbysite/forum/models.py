@@ -19,7 +19,7 @@ class Post(models.Model):
     category = models.ForeignKey(
         PostCategory,
         on_delete=models.SET_NULL,
-        null=true
+        null=True
     )
     entry = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
