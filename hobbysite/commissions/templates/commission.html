@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title%}Commission{% endblock %}
+{% block content %}
+<h1>{{ commission.commission }}</h1>
+<div class="date-time">
+    <small>{{ commission.created_on }}</small>
+    <small>{{ commission.updated_on }}</small>
+</div>
+<p>{{ commission.entry }}</p>
+{% endblock %}
