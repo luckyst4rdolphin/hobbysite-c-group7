@@ -32,4 +32,4 @@ class Post(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('post_showcase', args=[str(self.id)])
+        return reverse('forum:post_showcase', args=[self.pk])
