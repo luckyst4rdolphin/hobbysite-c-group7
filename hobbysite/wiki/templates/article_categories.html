@@ -11,8 +11,8 @@
                     {% if article.category.name == category.name %}
                         <li><a href='{{ article.get_absolute_url }}'>{{ article.title }}</a></li>
                     {% endif %}
-                {% endfor % }
+                {% endfor %}
             </ul>
-        {% endfor % }
+        {% endfor %}
     </ul>
 {% endblock %}
