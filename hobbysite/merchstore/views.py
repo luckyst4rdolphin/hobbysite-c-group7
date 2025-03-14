@@ -3,6 +3,9 @@ from django.views.generic.detail import DetailView
 from .models import Product, ProductType
 
 class MerchListView(ListView):
+    '''
+    View for displaying a list of product types and their associated products.
+    '''
     model = Product
     template_name = 'merch_list.html'
     context_object_name = "products"
@@ -14,6 +17,9 @@ class MerchListView(ListView):
 
 
 class MerchDetailView(DetailView):
+    '''
+    View for displaying details of a single product.
+    '''
     model = Product
     template_name = 'merch_detail.html'
     context_object_name = "product"
