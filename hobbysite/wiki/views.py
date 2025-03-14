@@ -31,5 +31,5 @@ class ArticleDetailView(DetailView):
     '''    
     context_object_name = 'article'
     model = Article
-    template_name = 'article.html'
+    template_name = 'wiki_article.html'
 
