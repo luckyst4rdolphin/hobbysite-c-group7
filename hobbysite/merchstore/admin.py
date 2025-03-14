@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import Product, ProductType
 
+
 class ProductTypeAdmin(admin.ModelAdmin):
     '''
     Admin configuration for ProductType model
