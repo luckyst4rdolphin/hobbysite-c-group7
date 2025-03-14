@@ -2,6 +2,7 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from .models import Product, ProductType
 
+
 class MerchListView(ListView):
     '''
     View for displaying a list of product types and their associated products.
