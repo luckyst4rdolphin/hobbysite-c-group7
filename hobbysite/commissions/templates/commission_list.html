@@ -6,9 +6,9 @@
 <h2>Commissions</h2>
 <ul>
     {% for commission in commissions %}
-        <li><a href="{{ commission.get_absolute_url }}">{{ commission.commission.title }}</a></li>
-        <dd>People Required: {{ commission.commission.people_required }}</dd>
-        <dd>Description: {{ commission.commission.description }}</dd>
+        <li><a href="{{ commission.get_absolute_url }}">{{ commission.title }}</a></li>
+        <dd>People Required: {{ commission.people_required }}</dd>
+        <dd>Description: {{ commission.description }}</dd>
     {% endfor %}
 </ul>
 {% endblock %}

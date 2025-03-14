@@ -3,10 +3,15 @@
 
 {% block title%}Commission{% endblock %}
 {% block content %}
-<h1>{{ commission.commission }}</h1>
+<h1>{{ commission.title }}</h1>
 <div class="date-time">
     <small>{{ commission.created_on }}</small>
     <small>{{ commission.updated_on }}</small>
 </div>
-<p>{{ commission.entry }}</p>
+{% for comment in comments %}
+    {% if commission.title == comment.commission.title %}
+        <p>{{ comment.entry }}</p> 
+    {% endif %}
+{% endfor %}
+
 {% endblock %}
