@@ -5,8 +5,8 @@
 {% block content %}
 <h1>{{ commission.title }}</h1>
 <div class="date-time">
-    <small>{{ commission.created_on }}</small>
-    <small>{{ commission.updated_on }}</small>
+    <small>Created on: {{ commission.created_on }}</small>
+    <small>Updated on: {{ commission.updated_on }}</small>
 </div>
 {% for comment in comments %}
     {% if commission.title == comment.commission.title %}
