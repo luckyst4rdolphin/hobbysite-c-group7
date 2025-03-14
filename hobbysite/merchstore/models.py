@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 
+
 class ProductType(models.Model):
     '''
     Represents a category or type of product.
