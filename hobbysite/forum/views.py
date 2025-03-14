@@ -23,7 +23,7 @@ class PostListView(ListView):
 
 class PostDetailView(DetailView):
     """
-    Displays details of a single thread.
+    A view that displays the details of a single thread.
     """
     context_object_name = "post"
     model = Post
