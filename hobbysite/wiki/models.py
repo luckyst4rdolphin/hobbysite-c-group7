@@ -25,6 +25,10 @@ class ArticleCategory(models.Model):
         verbose_name_plural = 'Article Categories'
 
     def __str__(self):
+        '''
+        @fn __str__
+        @brief returns the title of the object
+        '''
         return self.name
 
 class Article(models.Model):
