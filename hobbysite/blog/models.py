@@ -2,6 +2,9 @@ from django.db import models
 from django.urls import reverse
 
 class ArticleCategory(models.Model):
+    '''
+    Contains data for possible article categories.
+    '''
     name = models.CharField(max_length=255)
     description = models.TextField()
     
@@ -13,6 +16,9 @@ class ArticleCategory(models.Model):
         return self.name
     
 class Article(models.Model):
+    '''
+    Contains data for each article.
+    '''
     title = models.CharField(max_length=255)
     category = models.ForeignKey(
         ArticleCategory,
@@ -28,7 +34,7 @@ class Article(models.Model):
         ordering = ["-created_on"]
 
     def __str__(self):
-        return self.title
+        return self.entry
     
     def get_absolute_url(self):
         return reverse('blog:article-detail', args=[self.pk])
