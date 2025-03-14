@@ -3,7 +3,9 @@ from django.urls import reverse
 
 # Create your models here.
 class Commission(models.Model):
-
+    '''
+    Contains data for commissions added.
+    '''
     title = models.CharField(max_length=255)
     description = models.TextField()
     people_required = models.PositiveIntegerField()
@@ -20,6 +22,9 @@ class Commission(models.Model):
         return reverse('commissions:commissions-detail', args=[self.pk])
 
 class Comment(models.Model):
+    '''
+    Contains data for the comment/s made inside each commission.
+    '''
     commission = models.ForeignKey(
         Commission,
         on_delete=models.CASCADE,
