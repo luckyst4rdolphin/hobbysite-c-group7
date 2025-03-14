@@ -7,7 +7,7 @@ class PostAdmin(admin.ModelAdmin):
     Admin configuration for Post model.
     """
     model = Post
-    list_display = ('title',)
+    list_display = ('title', 'category', 'created_on',)
     search_fields = ('title',)
 
 class PostCategoryAdmin(admin.ModelAdmin):
