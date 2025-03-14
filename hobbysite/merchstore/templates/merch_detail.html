@@ -3,8 +3,8 @@
 {% block title %}{{ product.name }}{% endblock %}
 
 {% block content %}
-    <h2>Name: {{ product.name }}</h2>
-    <h2>Type: {{ product.product_type}}</h2>
-    <h2>Description: {{ product.description}}</h2>
-    <h2>Price: {{ product.price}}</h2>
+    <h2>{{ product.name }}</h2>
+    <p><b>Type:</b> {{ product.product_type.name }}</p>
+    <p><b>Description: </b><i>{{ product.description }}</i></p>
+    <p><b>Price:</b> ₱{{ product.price }}</p>
 {% endblock %}
