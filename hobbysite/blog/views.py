@@ -2,6 +2,9 @@ from django.views.generic import ListView, DetailView
 from blog.models import Article, ArticleCategory
 
 class ArticleListView(ListView):
+    '''
+    Creates a base view for displaying a list of objects.
+    '''
     context_object_name = "articles"
     queryset = Article.objects.all().order_by('-created_on')
     template_name = 'article_list.html'
@@ -12,6 +15,9 @@ class ArticleListView(ListView):
         return context
 
 class ArticleDetailView(DetailView):
+    '''
+    Creates a base view for displaying the complete article.
+    '''
     context_object_name = "article"
     model = Article
     template_name = 'article.html'
