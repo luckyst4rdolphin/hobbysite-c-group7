@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title%}Commission{% endblock %}
+{% block content %}
+<h1>{{ commission.title }}</h1>
+<div class="date-time">
+    <small>Created on: {{ commission.created_on }}</small>
+    <small>Updated on: {{ commission.updated_on }}</small>
+</div>
+{% for comment in comments %}
+    {% if commission.title == comment.commission.title %}
+        <p>{{ comment.entry }}</p> 
+    {% endif %}
+{% endfor %}
+
+{% endblock %}
