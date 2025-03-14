@@ -8,6 +8,7 @@ class ArticleCategory(models.Model):
 
     class Meta:
         ordering = ['name']
+        verbose_name_plural = 'Article Categories'
 
     def __str__(self):
         return self.name
@@ -20,7 +21,7 @@ class Article(models.Model):
         blank=True,
         null=True,
         )
-    entry = models.TextField
+    entry = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 
