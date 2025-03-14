@@ -14,7 +14,7 @@
                         {% if product_type.products.all %}
                             {% for product in product_type.products.all %}
                                 <li>
-                                    <a href="{{ product.get_absolute_url }}">{{ product.name }}</a> - ${{ product.price }}
+                                    <a href="{{ product.get_absolute_url }}">{{ product.name }}</a> - ₱{{ product.price }}
                                 </li>
                             {% endfor %}
                         {% else %}
