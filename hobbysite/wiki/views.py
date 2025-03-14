@@ -12,7 +12,7 @@ class ArticleListView(ListView):
         context['categories'] = ArticleCategory.objects.all().order_by('name')
         return context
 
-class ArticleDetailView(ListView):
+class ArticleDetailView(DetailView):
     context_object_name = 'article'
     model = Article
     template_name = 'article.html'
