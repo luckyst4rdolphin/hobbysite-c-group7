@@ -1,18 +1,24 @@
-from django.shortcuts import render
-from .models import Product
+from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
+from .models import Product, ProductType
 
-def products(request):
-    products = Product.objects.all()
-    ctx = {
-        "products": products
-    }
+class MerchListView(ListView):
+    model = Product
+    template_name = 'merch_list.html'
+    context_object_name = "products"
 
-    return render(request, "merch_list.html", ctx)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["product_types"] = ProductType.objects.prefetch_related("products")
+        return context
 
-def product(request, pk):
-    product = Product.objects.get(pk = pk)
-    ctx = {
-        "product": product,
-    }
 
-    return render(request, "merch_detail.html", ctx)
+class MerchDetailView(DetailView):
+    model = Product
+    template_name = 'merch_detail.html'
+    context_object_name = "product"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["product_type"] = self.object.product_type
+        return context
