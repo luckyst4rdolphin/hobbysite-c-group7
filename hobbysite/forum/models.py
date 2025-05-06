@@ -18,8 +18,13 @@ class Thread(models.Model):
     title = models.CharField(max_length=255)
     category = models.ForeignKey(
         ThreadCategory,
-        on_delete=models.SET_NULL,
-        null=True
+        on_delete = models.SET_NULL,
+        null = True
+    )
+    author = models.ForeignKey(
+        'profile.Profile',
+        on_delete = models.SET_NULL,
+        null = True
     )
     entry = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
