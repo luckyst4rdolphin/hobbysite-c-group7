@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block title%}{{ thread.title }}{% endblock %}
+{% block content %}
+    <h1>{{ thread.title }}</h1>
+    <h2>Category: {{ thread.category }}</h2>
+    <h2>Date posted: {{ thread.created_on }}</h2>
+    <h2>Date edited: {{ thread.updated_on }}</h2>
+    <p>{{ thread.entry }}</p>
+{% endblock %}

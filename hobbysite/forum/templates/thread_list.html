@@ -1,15 +1,15 @@
 {% extends 'base.html' %}
 
-{% block title %}Forum Categories{% endblock %}
+{% block title %}Thread Categories{% endblock %}
 {% block content %}
     <h2>Categories:</h2>
     <ul>
         {% for category in categories %}
             <li>{{ category.name }}</li>
             <ul>
-                {% for post in posts %}
-                    {% if post.category.name == category.name %}
-                        <li><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></li>
+                {% for thread in threads %}
+                    {% if thread.category.name == category.name %}
+                        <li><a href="{{ thread.get_absolute_url }}">{{ thread.title }}</a></li>
                     {% endif %}
                 {% endfor %}
             </ul>

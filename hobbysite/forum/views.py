@@ -7,9 +7,9 @@ class ThreadListView(ListView):
     A view that displays all categories, together with their respective threads.
     """
 
-    context_object_name = 'posts'
+    context_object_name = 'threads'
     queryset = Thread.objects.all()
-    template_name = 'post_list.html'
+    template_name = 'thread_list.html'
 
     
     def get_context_data(self, **kwargs):
@@ -25,6 +25,6 @@ class ThreadDetailView(DetailView):
     """
     A view that displays the details of a single thread.
     """
-    context_object_name = "post"
+    context_object_name = "thread"
     model = Thread
-    template_name = 'post.html'
+    template_name = 'thread.html'
