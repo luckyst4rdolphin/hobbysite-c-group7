@@ -2,7 +2,7 @@ from django.db import models
 from django.urls import reverse
 
 
-class PostCategory(models.Model):
+class ThreadCategory(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
 
@@ -14,10 +14,10 @@ class PostCategory(models.Model):
         return self.name
 
 
-class Post(models.Model):
+class Thread(models.Model):
     title = models.CharField(max_length=255)
     category = models.ForeignKey(
-        PostCategory,
+        ThreadCategory,
         on_delete=models.SET_NULL,
         null=True
     )

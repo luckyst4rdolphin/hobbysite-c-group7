@@ -1,5 +1,5 @@
 from django.urls import path
-from forum.views import PostListView, PostDetailView
+from forum.views import ThreadListView, ThreadDetailView
 
 urlpatterns = [
     path('threads/', PostListView.as_view(), name='posts_list'),
