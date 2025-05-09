@@ -127,7 +127,7 @@ STATIC_URL = 'static/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
-LOGIN_REDIRECT_URL = '/user_management/profile_form/'
+LOGIN_REDIRECT_URL = '/home/'
 LOGOUT_REDIRECT_URL = '/accounts/login/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'

@@ -1,4 +1,5 @@
-from django.views.generic import CreateView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import CreateView, UpdateView, ListView, DetailView
 from .models import Profile
 from .forms import RegisterForm, ProfileForm
 from django.urls import reverse_lazy
@@ -12,13 +13,18 @@ class UserCreateView(CreateView):
         context = super(UserCreateView, self).get_context_data(**kwargs)
         context['register_form'] = context['form']
         return context
+
+class ProfilePage(LoginRequiredMixin, ListView):
+    context_object_name = "profile"
+    model = Profile
+    queryset = Profile.objects.all()
+    template_name = "./profile.html"
     
-class  ProfileEdit(CreateView):
+class  ProfileEdit(UpdateView):
     model = Profile
     template_name = "./profile_form.html"
     form_class = ProfileForm
-    success_url = '/home/'
-
+    
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
