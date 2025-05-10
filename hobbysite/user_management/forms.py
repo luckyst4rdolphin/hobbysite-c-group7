@@ -8,6 +8,10 @@ class RegisterForm(UserCreationForm):
                              widget=forms.TextInput(attrs={'placeholder': 'Username',
                                                            'class': 'form-control',
                                                            }))
+    name = forms.CharField(required=True,
+                             widget=forms.TextInput(attrs={'placeholder': 'Name',
+                                                           'class': 'form-control',
+                                                           }))
     email = forms.EmailField(required=True,
                              widget=forms.TextInput(attrs={'placeholder': 'Email',
                                                            'class': 'form-control',
@@ -21,7 +25,7 @@ class RegisterForm(UserCreationForm):
                                                                   }))
     class Meta:
         model = User
-        fields = ["username", "email", "password1"]
+        fields = ["username", "name", "email", "password1"]
 
 class ProfileForm(forms.ModelForm):
     class Meta:
