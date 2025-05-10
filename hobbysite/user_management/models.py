@@ -14,4 +14,4 @@ class Profile(models.Model):
         return self.name
     
     def get_absolute_url(self):
-        return reverse('user_management:profile_page', args=[self.pk]) 
+        return reverse('user_management:profile_edit', args=[self.pk]) 

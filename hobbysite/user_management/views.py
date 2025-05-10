@@ -13,17 +13,15 @@ class UserCreateView(CreateView):
         context = super(UserCreateView, self).get_context_data(**kwargs)
         context['register_form'] = context['form']
         return context
-
-class ProfilePage(LoginRequiredMixin, ListView):
-    context_object_name = "profile"
-    model = Profile
-    queryset = Profile.objects.all()
-    template_name = "./profile.html"
     
 class  ProfileEdit(UpdateView):
     model = Profile
-    template_name = "./profile_form.html"
     form_class = ProfileForm
+    template_name = "./profile.html"
+    success_url = reverse_lazy('home')
+
+    def get_object(self):
+        return self.request.user.profile
     
     def form_valid(self, form):
         form.instance.user = self.request.user
