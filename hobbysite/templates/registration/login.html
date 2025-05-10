@@ -12,9 +12,9 @@
         <button type="submit">Login</button>
     </form>
 
-    <a href="{% url 'password_reset' %}">Forgot password?</a>
-    <br>
-    <p>New to Hobbysite?</p>
-    <a href="/register/">Sign up</a>
+    <p>
+        <a href="/register/"><button>Sign Up</button></a>
+        <a href="{% url 'password_reset' %}"><button>Forgot password?</button></a>
+    </p>
 </body>
 </html>
