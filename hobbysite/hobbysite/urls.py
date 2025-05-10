@@ -6,7 +6,7 @@ urlpatterns = [
     path('home/', HomePageView.as_view(), name='home'),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('user_management/', include('user_management.urls')),
+    path('', include('user_management.urls')),
     path('commissions/', include('commissions.urls')),
     path('forum/', include('forum.urls')),
     path('merchstore/', include('merchstore.urls')),
