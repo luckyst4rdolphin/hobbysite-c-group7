@@ -9,6 +9,12 @@ class UserCreateView(CreateView):
     form_class = RegisterForm
     success_url = '/accounts/login/'
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        user = form.instance
+        Profile.objects.create(user=user, name=form.cleaned_data['name'], email=form.cleaned_data['email'])
+        return response
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['register_form'] = context['form']
@@ -25,7 +31,7 @@ class ProfileEdit(LoginRequiredMixin, UpdateView):
         return profile
 
     def form_valid(self, form):
-        form.instance.user = self.request.user
+        form.save()
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
