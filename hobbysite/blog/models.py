@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from user_management.models import Profile
 
 class ArticleCategory(models.Model):
     '''
@@ -26,6 +27,13 @@ class Article(models.Model):
         blank = True,
         null = True,
     )
+    author = models.ForeignKey(
+        Profile,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+    )
+    header_image = models.ImageField(null=False, upload_to="images/")
     entry = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -38,3 +46,20 @@ class Article(models.Model):
     
     def get_absolute_url(self):
         return reverse('blog:article-detail', args=[self.pk])
+    
+class Comment(models.Model):
+    author = models.ForeignKey(
+        Profile,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+    )
+    article = models.ForeignKey(
+        on_delete=models.CASCADE
+    )
+    entry = models.TextField()
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["created_on"]
