@@ -73,6 +73,13 @@ class Product(models.Model):
         '''
         return reverse('merchstore:merch_detail', args=[self.pk])
     
+    def save(self, *args, **kwargs):
+        if self.stock == 0:
+            self.status = "Out of Stock"
+        else:
+            self.status = "Available"
+        super().save(*args, **kwargs)
+    
 class Transaction(models.Model):
     STATUS_CHOICES = [
         ("On cart", "On cart"),
