@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.urls import path, include
 from .views import HomePageView
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('home/', HomePageView.as_view(), name='home'),
@@ -13,3 +15,7 @@ urlpatterns = [
     path('blog/', include('blog.urls')),
     path('wiki/', include('wiki.urls')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, 
+                      document_root=settings.MEDIA_ROOT)
