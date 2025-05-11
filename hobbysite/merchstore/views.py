@@ -1,7 +1,7 @@
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
-from .models import Product, ProductType
+from .models import Product, ProductType, Transaction
 from .forms import ProductForm, TransactionForm
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import render, redirect
@@ -54,6 +54,8 @@ class MerchDetailView(DetailView):
                 transaction.product.stock -= transaction.amount
                 if transaction.product.stock == 0:
                     transaction.product.status = "Out of Stock"
+                else:
+                    transaction.product.status = "Available"
                 transaction.product.save()
             
                 transaction.status = "On cart"
@@ -71,6 +73,10 @@ class MerchCreateView(CreateView):
     def form_valid(self, form):
         product = form.save(commit=False)
         product.owner = self.request.user.profile
+        if product.stock == 0:
+            product.status = "Out of Stock"
+        else:
+            product.status = "Available"
         product.save()
         return super().form_valid(form)
 
@@ -93,3 +99,27 @@ class MerchUpdateView(UpdateView):
 
     def get_success_url(self):
         return reverse_lazy('merchstore:merch_detail', args=[self.object.pk])
+
+class MerchCartView(ListView):
+    model = Transaction
+    template_name = 'merchstore_cart.html'
+    context_object_name = 'cart_items'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user_profile = self.request.user.profile
+
+        context['cart_items'] = Transaction.objects.filter(buyer=user_profile)
+        return context
+
+class MerchTransactionView(ListView):
+    model = Transaction
+    template_name = 'merchstore_transaction.html'
+    context_object_name = 'transaction_items'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user_profile = self.request.user.profile
+
+        context['transaction_items'] = Transaction.objects.filter(product__owner=user_profile)
+        return context
