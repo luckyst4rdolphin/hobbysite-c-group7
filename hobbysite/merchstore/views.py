@@ -1,23 +1,29 @@
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
 from .models import Product, ProductType
 from .forms import ProductForm, TransactionForm
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import render, redirect
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class MerchListView(ListView):
-    '''
-    View for displaying a list of product types and their associated products.
-    '''
+class MerchListView(LoginRequiredMixin, ListView):
     model = Product
     template_name = 'merchstore_list.html'
-    context_object_name = "products"
+    context_object_name = 'all_products'  # this will be all products except user's
+
+    def get_queryset(self):
+        # Exclude products owned by the logged-in user
+        return Product.objects.exclude(owner=self.request.user.profile)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["product_types"] = ProductType.objects.prefetch_related("products")
+        user_profile = self.request.user.profile
+
+        context['user_products'] = Product.objects.filter(owner=user_profile)
+        context['product_types'] = ProductType.objects.prefetch_related('products')
+        context['create_product_url'] = reverse('merchstore:merch_create')  # assumes named URL exists
         return context
 
 
@@ -70,3 +76,20 @@ class MerchCreateView(CreateView):
 
     def get_success_url(self):
         return reverse_lazy('merchstore:merch_list')
+
+class MerchUpdateView(UpdateView):
+    model = Product
+    form_class = ProductForm
+    template_name = 'merchstore_update.html'
+
+    def form_valid(self, form):
+        product = form.save(commit=False)
+        if product.stock == 0:
+            product.status = "Out of Stock"
+        else:
+            product.status = "Available"
+        product.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('merchstore:merch_detail', args=[self.object.pk])
