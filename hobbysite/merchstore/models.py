@@ -1,5 +1,7 @@
 from django.db import models
 from django.urls import reverse
+from user_management.models import Profile
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class ProductType(models.Model):
@@ -26,6 +28,11 @@ class Product(models.Model):
     '''
     Represents an individual product belonging to a specific product type.
     '''
+    STATUS_CHOICES = [
+        ("Available", "Available"),
+        ("On sale", "On sale"),
+        ("Out of Stock", "Out of Stock"),
+    ]
     name = models.CharField(max_length = 255)
     product_type = models.ForeignKey(
         ProductType,
@@ -34,8 +41,19 @@ class Product(models.Model):
         null = True,
         related_name = "products"
     )
+    owner = models.ForeignKey(
+        Profile,
+        null = True,
+        on_delete = models.CASCADE  
+    )
     description = models.TextField()
     price = models.DecimalField(max_digits = 50, decimal_places = 2)
+    stock = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="Available"
+    )
 
     class Meta:
         '''
@@ -54,3 +72,29 @@ class Product(models.Model):
         Returns the URL for the product's detail page.
         '''
         return reverse('merchstore:merch_detail', args=[self.pk])
+    
+class Transaction(models.Model):
+    STATUS_CHOICES = [
+        ("On cart", "On cart"),
+        ("To Pay", "To Pay"),
+        ("To Ship", "To Ship"),
+        ("To Receive", "To Receive"),
+        ("Delivered", "Delivered"),
+    ]
+
+    buyer = models.ForeignKey(
+        Profile,
+        null=True,
+        on_delete=models.SET_NULL
+    )
+    product = models.ForeignKey(
+        Product,
+        null=True,
+        on_delete=models.SET_NULL
+    )
+    amount = models.PositiveIntegerField(default=1)
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES
+    )
+    created_on = models.DateTimeField(auto_now_add=True)
