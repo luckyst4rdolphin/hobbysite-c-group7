@@ -55,5 +55,5 @@ class ThreadDetailView(LoginRequiredMixin, DetailView):
 
         return context
 
-class ThreadCreateView(LoginRequiredMixin, DetailView):
+class ThreadCreateView(LoginRequiredMixin, CreateView):
 
