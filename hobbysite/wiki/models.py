@@ -36,9 +36,9 @@ class Article(models.Model):
     @authors : Antonth Chrisdale C. Lopez
     
     This class is the model class for Article
-    This contains the specified parameters for title, category,
-    entry, created_on, and updated_on required in the specs of 
-    the project.
+    This contains the specified parameters for title, author,
+    category, entry, created_on, and updated_on required in 
+    the specs of the project.
 
     '''
 
@@ -65,9 +65,9 @@ class Article(models.Model):
         @authors : Antonth Chrisdale C. Lopez
     
         This class is the model class for Article
-        This contains the specified parameters for title, category,
-        entry, created_on, and updated_on required in the specs of 
-        the project.
+        This contains the specified parameters for title, author,
+        category, entry, created_on, and updated_on required in 
+        the specs of the project.
 
         '''
         ordering = ['-created_on']
@@ -85,3 +85,55 @@ class Article(models.Model):
         @brief returns url of the article
         '''
         return reverse('wiki:article-detail', args=[self.pk])
+
+class Comment(models.Model):
+    '''
+    @authors : Antonth Chrisdale C. Lopez
+    
+    This class is the model class for Comment
+    This contains the specified parameters for author, article,
+    entry, created_on, and updated_on required in the specs 
+    of the project.
+
+    '''
+    author = models.ForeignKey(
+        'profile.Profile',
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        )
+    article = models.ForeignKey(
+        Article, 
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        )
+    entry = models.TextField()
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        '''
+        @authors : Antonth Chrisdale C. Lopez
+   
+        This class is the model class for Comment
+        This contains the specified parameters for author, article,
+        entry, created_on, and updated_on required in the specs 
+        of the project.
+
+        '''
+        ordering = ['created_on']
+
+    def __str__(self):
+        '''
+        @fn __str__
+        @brief returns the entry of the object
+        '''
+        return self.entry
+    
+    def get_absolute_url(self):
+        '''
+        @fn get_absolute_url
+        @brief returns url of the comment
+        '''
+        return reverse('wiki:article-comment', args=[self.pk])
