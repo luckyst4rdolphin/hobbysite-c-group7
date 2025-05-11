@@ -36,7 +36,7 @@ class Commission(models.Model):
         return self.title
     
     def get_absolute_url(self):
-        return reverse('commissions:sommissions-detail', args=[self.pk])
+        return reverse('commissions:commissions-detail', args=[self.pk])
     
 class Job(models.Model):
     STATUS_CHOICES = [
@@ -102,3 +102,6 @@ class JobApplication(models.Model):
             ),
             '-applied_on'
         ]
+
+    def __str__(self):
+        return f"{self.applicant.name} - {self.job.role} - {self.status}"
