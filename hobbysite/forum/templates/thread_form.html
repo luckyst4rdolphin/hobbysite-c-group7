@@ -3,4 +3,10 @@
 
 {% block title %} Add New Thread {% endblock %}
 {% block content %}
-	<h1>Add New Thread</h1>
+<h1>Add New Thread</h1>
+<form method="POST" enctype="multipart/form-data">
+	{% csrf_token %}
+	{{ article_form.as_p }}
+	<button type="submit">Save</button>
+</form>
+{% endblock %}
