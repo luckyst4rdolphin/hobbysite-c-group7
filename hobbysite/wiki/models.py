@@ -43,6 +43,12 @@ class Article(models.Model):
     '''
 
     title = models.CharField(max_length=255)
+    author = models.ForeignKey(
+        'profile.Profile',
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        )
     category = models.ForeignKey(
         ArticleCategory, 
         on_delete=models.SET_NULL,
@@ -50,6 +56,7 @@ class Article(models.Model):
         null=True,
         )
     entry = models.TextField()
+    header_image = models.ImageField(null=False, upload_to="images/")
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 
