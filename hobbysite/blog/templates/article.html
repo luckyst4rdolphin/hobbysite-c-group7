@@ -5,7 +5,9 @@
     <h1>{{ article.title }}</h1>
     <div class="date-time">
         <small>Created on: {{ article.created_on }}</small><br>
-        <small>Updated on: {{ article.updated_on }}</small>
+        <small>Updated on: {{ article.updated_on }}</small><br>
+        <small>Written by: {{ article.author }}</small>
     </div>
+    <img src="{{ article.header_image.url }}">
     <p>{{ article.entry }}</p>
 {% endblock %}

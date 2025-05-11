@@ -2,17 +2,23 @@
 
 {% block title%}Article Category List{% endblock %}
 {% block content %}
+    <h2>My Articles</h2>
+    {% for article in articles %}
+        {% if article.author.name == user.profile.name %}
+            <li><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></li>
+        {% endif %}
+    {% endfor %}
     <h2>Blog Articles</h2>
     <ul>
         {% for category in categories %}
             <li>{{ category.name }}</li>
             <ul>
             {% for article in articles %}
-                {% if article.category.name == category.name %}
+                {% if article.category.name == category.name and article.author.name != user.profile.name%}
                     <li><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></li>
                 {% endif %}
             {% endfor %}
                 </ul>
-            {% endfor %}
+        {% endfor %}
     </ul>
 {% endblock %}
