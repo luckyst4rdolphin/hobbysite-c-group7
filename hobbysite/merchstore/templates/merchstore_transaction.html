@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}My Transactions{% endblock %}
+
+{% block content %}
+    <h1>My Transactions</h1>
+    <ul>
+        {% for item in transaction_items %}
+            <li>{{ item.product.name }} - Buyer: {{ item.buyer }}</li>
+        {% empty %}
+            <li>No products.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
