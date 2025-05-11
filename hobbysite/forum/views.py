@@ -3,6 +3,7 @@ from forum.models import ThreadCategory, Thread, Comment
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import render, redirect
+from .forms import ThreadForm
 
 class ThreadListView(LoginRequiredMixin, ListView):
     """
@@ -57,3 +58,16 @@ class ThreadDetailView(LoginRequiredMixin, DetailView):
 
 class ThreadCreateView(LoginRequiredMixin, CreateView):
 
+    model = Thread
+    template_name = "thread_form.html"
+    form_class = ThreadForm
+    success_url = reverse_lazy('forum:thread-list')
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user.profile
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super(ThreadCreateView, self).get_context_data(**kwargs)
+        context['thread_form'] = context['form']
+        return context
