@@ -2,6 +2,7 @@
 
 {% block title%}Article Category List{% endblock %}
 {% block content %}
+<a href="/blog/article/add/"><button>Create Article</button></a>
     <h2>My Articles</h2>
     {% for article in articles %}
         {% if article.author.name == user.profile.name %}
