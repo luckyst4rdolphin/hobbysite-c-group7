@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from user_management.models import Profile
 
 
 class ThreadCategory(models.Model):
@@ -22,7 +23,7 @@ class Thread(models.Model):
         null = True
     )
     author = models.ForeignKey(
-        'profile.Profile',
+        'Profile',
         on_delete = models.SET_NULL,
         null = True
     )
@@ -42,7 +43,7 @@ class Thread(models.Model):
 
 class Comment(models.Model):
     author = models.ForeignKey(
-        'profile.Profile',
+        'Profile',
         on_delete = models.SET_NULL,
         null = True
     )
