@@ -5,6 +5,7 @@
 {% block content %}
     <h1>Merchandise Store</h1>
     <h2>Available Merchandise</h2>
+    <a href="/merchstore/item/add"><button>Add Product</button></a>
 
     {% if product_types %}
         <ul>
@@ -28,4 +29,8 @@
     {% else %}
         <p>No merchandise available.</p>
     {% endif %}
+
+    <p>
+        <a href="{% url 'home' %}"><button>Back to Home</button></a>
+    </p>
 {% endblock %}
