@@ -33,7 +33,7 @@ class ThreadListView(LoginRequiredMixin, ListView):
         return context
 
 
-class ThreadDetailView(DetailView):
+class ThreadDetailView(LoginRequiredMixin, DetailView):
     """
     A view that displays the details of a single thread.
     """
