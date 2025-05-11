@@ -54,3 +54,6 @@ class ThreadDetailView(LoginRequiredMixin, DetailView):
         context['comments'] = comments
 
         return context
+
+class ThreadCreateView(LoginRequiredMixin, DetailView):
+
