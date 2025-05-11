@@ -16,4 +16,8 @@
         {% endfor %}
     </ul>
 
+    {% if user.is_authenticated and thread.author == user.profile %}
+        <a href="{% url 'forum:thread-edit' thread.id %}">Edit Thread</a>
+    {% endif %}
+
 {% endblock %}

@@ -71,3 +71,15 @@ class ThreadCreateView(LoginRequiredMixin, CreateView):
         context = super(ThreadCreateView, self).get_context_data(**kwargs)
         context['thread_form'] = context['form']
         return context
+
+
+class ThreadUpdateView(LoginRequiredMixin, UpdateView):
+
+    model = Thread
+    template_name = "thread_form.html"
+    form_class = ThreadForm
+    success_url = reverse_lazy('forum:thread-list')
+
+    def get_queryset(self):
+        # Only allows the respective thread author to edit the thread
+        return Thread.objects.filter(author=self.request.user.profile)
