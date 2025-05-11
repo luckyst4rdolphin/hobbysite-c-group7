@@ -1,23 +1,35 @@
 from django.views.generic import ListView, DetailView
-from forum.models import ThreadCategory, Thread
+from forum.models import ThreadCategory, Thread, Comment
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy, reverse
+from django.shortcuts import render, redirect
 
-
-class ThreadListView(ListView):
+class ThreadListView(LoginRequiredMixin, ListView):
     """
-    A view that displays all categories, together with their respective threads.
+    A view that displays all threads in the system, grouped by category,
+    with a separate group for threads authored by the logged-in user.
     """
-
-    context_object_name = 'threads'
-    queryset = Thread.objects.all()
     template_name = 'thread_list.html'
+    context_object_name = 'all_threads'  # used for non-user threads
 
-    
+    def get_queryset(self):
+        """
+        Return threads not authored by the current user, ordered by category name.
+        """
+        return Thread.objects.exclude(author=self.request.user.profile).select_related('category').order_by('category__name')
+
     def get_context_data(self, **kwargs):
         """
-        Adds thread categories to the context.
+        Adds user's threads, all categories, and all other threads to the context.
         """
         context = super().get_context_data(**kwargs)
-        context['categories'] = ThreadCategory.objects.all()
+
+        # All categories (used for grouping)
+        context['categories'] = ThreadCategory.objects.all().order_by('name')
+
+        # Threads created by the logged-in user
+        context['user_threads'] = Thread.objects.filter(author=self.request.user.profile).order_by('-created_on')
+
         return context
 
 
