@@ -4,7 +4,28 @@
 
 {% block content %}
     <h1>Merchandise Store</h1>
-    <h2>Available Merchandise</h2>
+    <h2>Your Products</h2>
+    <ul>
+        {% for product in user_products %}
+            <li><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></li>
+        {% empty %}
+            <li>No products posted by you.</li>
+        {% endfor %}
+    </ul>
+
+    <hr>
+
+    <h2>All Products</h2>
+    <ul>
+        {% for product in all_products %}
+            <li><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></li>
+        {% empty %}
+            <li>No other products available.</li>
+        {% endfor %}
+    </ul>
+
+
+    <!-- <h2>Available Merchandise</h2>
     <a href="/merchstore/item/add"><button>Add Product</button></a>
 
     {% if product_types %}
@@ -28,7 +49,7 @@
         </ul>
     {% else %}
         <p>No merchandise available.</p>
-    {% endif %}
+    {% endif %} -->
 
     <p>
         <a href="{% url 'home' %}"><button>Back to Home</button></a>
