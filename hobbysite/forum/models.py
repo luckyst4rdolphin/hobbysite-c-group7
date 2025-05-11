@@ -23,7 +23,7 @@ class Thread(models.Model):
         null = True
     )
     author = models.ForeignKey(
-        'Profile',
+        Profile,
         on_delete = models.SET_NULL,
         null = True
     )
@@ -43,7 +43,7 @@ class Thread(models.Model):
 
 class Comment(models.Model):
     author = models.ForeignKey(
-        'Profile',
+        Profile,
         on_delete = models.SET_NULL,
         null = True
     )
