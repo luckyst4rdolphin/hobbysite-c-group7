@@ -65,17 +65,17 @@ class ArticleUpdateView(LoginRequiredMixin, UpdateView):
     This class contains the form view for updating existing
     Articles.
 
-    '''    
+    '''
     model = Article
     template_name = 'article_update_form.html'
     form_class = ArticleUpdateForm
-    success_url = '/wiki/article/add'
+    success_url = '/wiki/<int:pk>/1/edit' #TO DO
 
     def form_valid(self, form):
         form.instance.author = self.request.user.profile
         return super().form_valid(form)
     
     def get_context_data(self, **kwargs):
-        context = super(ArticleCreateView, self).get_context_data(**kwargs)
+        context = super(ArticleUpdateView, self).get_context_data(**kwargs)
         context['article_update_form'] = context['form']
         return context
