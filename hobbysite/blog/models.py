@@ -55,6 +55,7 @@ class Comment(models.Model):
         null=True,
     )
     article = models.ForeignKey(
+        Article,
         on_delete=models.CASCADE
     )
     entry = models.TextField()
