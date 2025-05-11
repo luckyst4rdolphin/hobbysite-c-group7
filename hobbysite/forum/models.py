@@ -8,7 +8,7 @@ class ThreadCategory(models.Model):
 
     class Meta:
         ordering = ['name']
-        verbose_name_plural = 'Post categories'
+        verbose_name_plural = 'Thread categories'
 
     def __str__(self):
         return self.name
@@ -37,7 +37,7 @@ class Thread(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('forum:post_showcase', args=[self.pk])
+        return reverse('forum:thread-detail', args=[self.pk])
 
 
 class Comment(models.Model):
