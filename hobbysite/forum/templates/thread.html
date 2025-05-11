@@ -7,4 +7,13 @@
     <h2>Date posted: {{ thread.created_on }}</h2>
     <h2>Date edited: {{ thread.updated_on }}</h2>
     <p>{{ thread.entry }}</p>
+    <h3>Related Posts</h3>
+    <ul>
+        {% for post in related_posts|slice:":5" %}
+            <li><a href="{% url 'thread-detail' pk=post.pk %}">{{ post.title }}</a></li>
+	{% empty %}
+	    <p>No other posts in this category.</p>
+        {% endfor %}
+    </ul>
+
 {% endblock %}

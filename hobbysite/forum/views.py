@@ -40,3 +40,17 @@ class ThreadDetailView(DetailView):
     context_object_name = "thread"
     model = Thread
     template_name = 'thread.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Fetch other posts from the same category, excluding the current thread
+        category = self.object.category
+        related_posts = Thread.objects.filter(category=category).exclude(id=self.object.id)
+        context['related_posts'] = related_posts
+
+        # Fetch comments sorted by 'Created On' (oldest first)
+        comments = Comment.objects.filter(thread=self.object).order_by('created_on')
+        context['comments'] = comments
+
+        return context
