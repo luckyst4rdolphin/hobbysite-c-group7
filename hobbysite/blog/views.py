@@ -1,7 +1,9 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView
 from blog.models import Article, ArticleCategory
+from user_management.models import Profile
 
-class ArticleListView(ListView):
+class ArticleListView(LoginRequiredMixin, ListView):
     '''
     Creates a base view for displaying a list of objects.
     '''
@@ -12,6 +14,8 @@ class ArticleListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['categories'] = ArticleCategory.objects.all().order_by('name')
+        context['user'] = self.request.user
+        context['profile'] = Profile.objects.all()
         return context
 
 class ArticleDetailView(DetailView):
