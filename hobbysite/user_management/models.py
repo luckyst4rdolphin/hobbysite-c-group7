@@ -8,10 +8,10 @@ class Profile(models.Model):
     '''
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=63)
-    email = models.EmailField(max_length=255)
+    email = models.EmailField(max_length=255, unique=True)
 
     def __str__(self):
+        '''
+        Returns the user's name.
+        '''
         return self.name
-    
-    def get_absolute_url(self):
-        return reverse('user_management:profile_edit', args=[self.pk]) 
