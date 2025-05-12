@@ -6,7 +6,7 @@
 <h1>Add New Thread</h1>
 <form method="POST" enctype="multipart/form-data">
 	{% csrf_token %}
-	{{ thread_form.as_p }}
+	{{ form.as_p }}
 	<button type="submit">Post</button>
 </form>
 {% endblock %}
