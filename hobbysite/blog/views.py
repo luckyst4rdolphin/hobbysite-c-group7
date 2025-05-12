@@ -1,8 +1,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic.edit import ModelFormMixin
 from django.views.generic import ListView, DetailView, CreateView
-from blog.models import Article, ArticleCategory
+from blog.models import Article, ArticleCategory, Comment
 from user_management.models import Profile
-from .forms import ArticleForm
+from .forms import ArticleForm, CommentForm
 from django.urls import reverse_lazy
 
 class ArticleListView(LoginRequiredMixin, ListView):
@@ -20,13 +21,42 @@ class ArticleListView(LoginRequiredMixin, ListView):
         context['profile'] = Profile.objects.all()
         return context
 
-class ArticleDetailView(LoginRequiredMixin, DetailView):
+class ArticleDetailView(LoginRequiredMixin, DetailView, ModelFormMixin):
     '''
     Creates a base view for displaying the complete article.
     '''
     context_object_name = "article"
     model = Article
     template_name = 'article.html'
+    form_class = CommentForm
+    initial = {'entry':'Say something'}
+
+    def get_success_url(self):
+        return reverse_lazy('blog:article-detail', kwargs={'pk': self.object.article.pk})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['articles'] = Article.objects.all().order_by('-created_on')
+        context['comment_form'] = context['form']
+        context['comments'] = Comment.objects.filter(article=self.object)
+        context['user'] = self.request.user
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        self.object = self.get_object()
+
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+        
+    def form_valid(self, form):
+        new_comment = form.save(commit=False)
+        new_comment.article = self.object
+        new_comment.author = self.request.user.profile
+        new_comment.save()
+        return super(ArticleDetailView, self).form_valid(form)
 
 class ArticleCreateView(LoginRequiredMixin, CreateView):
 
