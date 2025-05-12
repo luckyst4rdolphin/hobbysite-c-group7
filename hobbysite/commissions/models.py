@@ -54,7 +54,7 @@ class Job(models.Model):
         on_delete=models.CASCADE
     )
     role = models.CharField(max_length=255)
-    manpower_required = models.PositiveBigIntegerField()
+    manpower_required = models.PositiveIntegerField()
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
