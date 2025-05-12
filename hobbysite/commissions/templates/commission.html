@@ -4,6 +4,7 @@
 {% block title %}Commission{% endblock %}
 
 {% block content %}
+
 <h1>{{ commission.title }}</h1>
 <div class="date-time">
     <small>Status: {{ commission.status }}</small><br>
@@ -13,37 +14,45 @@
 
 <p>{{ commission.description }}</p>
 
-<h3>Jobs</h3>
+<h1>Jobs</h1>
 {% with total=0 open=0 %}
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>
+            <b style="color:blue">{{ message }}</b>
+        </li>
+    {% endfor %}
+</ul>
+{% endif %}
+
 <ul>
     {% for job in jobs %}
-    {% if job.commission.id == commission.id %}
-    {% with accepted_count=job.jobapplication_set.filter(status='Accepted').count %}
     <li>
         <strong>{{ job.role }}</strong> ({{ job.status }})<br>
         Manpower Required: {{ job.manpower_required }}<br>
-        Open Slots: {{ job.manpower_required|add:"-accepted_count" }}
-
+        Open Slots: {{ job.open_slots }}<br>
+    
         {% if user.is_authenticated %}
-        {% if accepted_count < job.manpower_required %} <form method="post"
-            action="{% url 'commissions:apply-to-job' job.pk %}">
-            {% csrf_token %}
-            <button type="submit">Apply to Job</button>
-            </form>
+            {% if job.open_slots|default:0 == 0 %}
+                <button type="submit" disabled>Apply to Job</button>
             {% else %}
-            <button disabled>Applications Full</button>
+                <form method="post" action="{% url 'commissions:job-apply' job.pk %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit">Apply to Job</button>
+                </form>
             {% endif %}
-            {% endif %}
+        {% else %}
+            <p><a href="{% url 'login' %}">Log in to apply</a></p>
+        {% endif %}
     </li>
-    {% with total=total|add:job.manpower_required open=open|add:job.manpower_required|add:"-accepted_count" %}
-    {% endwith %}
-    {% endwith %}
-    {% endif %}
     {% endfor %}
 </ul>
-<p><strong>Total Manpower Required:</strong> {{ total }}</p>
-<p><strong>Total Open Slots:</strong> {{ open }}</p>
 {% endwith %}
+
+<p><strong>Total Manpower Required:</strong> {{ job_total_manpower_required }}</p>
+<p><strong>Total Open Slots:</strong> {{ job_total_open_slots }}</p>
 
 {% if user == commission.author %}
 <a href="{% url 'commissions:commissions-update' commission.pk %}">Edit this Commission</a>

@@ -6,8 +6,8 @@
     {% for commission in commissions %}
     <li>
         <strong>{{ commission.title }}</strong><br>
-        Required: {{ commission.people_required }} people<br>
-        Posted by: {{ commission.author.username }}<br>
+        Required: {{ commission.job_total_manpower_required }} people<br>
+        Posted by: {{ commission.author.name }}<br>
         Posted on: {{ commission.created_on|date:"M d, Y" }}<br>
         <a href="{% url 'commissions:commissions-detail' commission.pk %}">View details</a>
     </li>
