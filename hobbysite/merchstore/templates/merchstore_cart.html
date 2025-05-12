@@ -11,4 +11,10 @@
             <li>No products on cart.</li>
         {% endfor %}
     </ul>
+
+    <p>
+        <a href="{% url 'merchstore:merch_list' %}">
+            <button>Back to Merch Store</button>
+        </a>
+    </p>
 {% endblock %}
