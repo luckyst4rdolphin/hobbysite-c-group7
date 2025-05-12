@@ -11,7 +11,7 @@ class Profile(models.Model):
     email = models.EmailField(max_length=255)
 
     def __str__(self):
+        '''
+        Returns the user's name.
+        '''
         return self.name
-    
-    def get_absolute_url(self):
-        return reverse('user_management:profile_edit', args=[self.pk]) 
