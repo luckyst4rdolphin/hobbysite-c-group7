@@ -14,24 +14,22 @@ class MerchListView(ListView):
     context_object_name = 'all_products'
 
     def get_queryset(self):
-        # If the user is authenticated, exclude their own products
-        if self.request.user.is_authenticated:
-            return Product.objects.exclude(owner=self.request.user.profile)
-        else:
-            all_products = Product.objects.all()
-            return all_products
+        user = self.request.user
+        if user.is_authenticated:
+            return Product.objects.exclude(owner=user.profile)
+        return Product.objects.all()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        user = self.request.user
 
-        if self.request.user.is_authenticated:
-            user_profile = self.request.user.profile
-            context['user_products'] = Product.objects.filter(owner=user_profile)
-            context['product_types'] = ProductType.objects.all()
-            context['create_product_url'] = reverse('merchstore:merch_create')
+        context['product_types'] = ProductType.objects.all()
+        context['create_product_url'] = reverse('merchstore:merch_create')
+
+        if user.is_authenticated:
+            context['user_products'] = Product.objects.filter(owner=user.profile)
         else:
-            context['user_products'] = [] 
-            context['product_types'] = ProductType.objects.all()
+            context['user_products'] = []
 
         return context
 
@@ -52,10 +50,11 @@ class MerchDetailView(DetailView):
     
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
+        form = TransactionForm(request.POST)
+
         if not request.user.is_authenticated:
             return redirect('login')
         
-        form = TransactionForm(request.POST)
         if form.is_valid():
             transaction = form.save(commit=False)
             transaction.buyer = request.user.profile
@@ -63,6 +62,7 @@ class MerchDetailView(DetailView):
             
             if transaction.product.stock >= transaction.amount:
                 transaction.product.stock -= transaction.amount
+
                 if transaction.product.stock == 0:
                     transaction.product.status = "Out of Stock"
                 else:
@@ -119,7 +119,6 @@ class MerchCartView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user_profile = self.request.user.profile
-
         context['cart_items'] = Transaction.objects.filter(buyer=user_profile).order_by('product__owner')
         return context
 
@@ -131,6 +130,5 @@ class MerchTransactionView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user_profile = self.request.user.profile
-
         context['transaction_items'] = Transaction.objects.filter(product__owner=user_profile).order_by('buyer')
         return context
