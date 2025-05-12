@@ -39,10 +39,14 @@ class CommissionListView(ListView):
         
         # If the user is logged in, add two categories above the list:
         if user.is_authenticated and hasattr(user, 'profile'):
-            context['my_commissions'] = Commission.objects.filter(author=user.profile)
+            context['my_commissions'] = Commission.objects.filter(author=user.profile).annotate(
+                job_total_manpower_required=Sum('job__manpower_required')
+                )
             context['applied_commissions'] = Commission.objects.filter(
                 job__jobapplication__applicant=user.profile
-            ).distinct()
+            ).distinct().annotate(
+                job_total_manpower_required=Sum('job__manpower_required')
+            )
         else:
             context['my_commissions'] = Commission.objects.none()
             context['applied_commissions'] = Commission.objects.none()
@@ -71,6 +75,7 @@ class CommissionDetailView(DetailView):
             accepted_count=Count('jobapplication', filter=Q(jobapplication__status='Accepted'))
         )
 
+
         job_messages = {}
         for job in jobs:
             job.open_slots = job.manpower_required - job.accepted_count
@@ -80,6 +85,11 @@ class CommissionDetailView(DetailView):
                 # Check if user has applied
                 if JobApplication.objects.filter(job=job, applicant=user_profile).exists():
                     job_messages[job.pk] = "Already applied"
+        
+        # Check if all jobs are 'Full'
+        if all(job.status == 'Full' for job in jobs):
+            commission.status = 'Full'
+            commission.save()
 
         context['jobs'] = jobs
         context['job_messages'] = job_messages
@@ -123,6 +133,46 @@ class CommissionUpdateView(LoginRequiredMixin, UpdateView):
         self.object.save()
 
         return super().form_valid(form)
+
+class JobDetailView(DetailView):
+    model = Job
+    template_name = "job_detail.html"
+    context_object_name = "job"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        applications = JobApplication.objects.filter(job=self.object)
+        for application in applications:
+            application.is_pending = (application.status == 'Pending')
+            application.is_accepted = (application.status == 'Accepted')
+            application.is_rejected = (application.status == 'Rejected')
+        context['applicants'] = applications
+        context['commission'] = self.object.commission  # add this so template can check for author
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        commission = self.object.commission
+        if not request.user.is_authenticated or not hasattr(request.user, 'profile'):
+            messages.error(request, "You must be logged in.")
+            return redirect('login')
+
+        if request.user.profile != commission.author:
+            messages.error(request, "You are not authorized to update applicants for this job.")
+            return redirect('commissions:job-details', pk=self.object.pk)
+
+        app_id = request.POST.get('application_id')
+        new_status = request.POST.get('status')
+
+        if app_id and new_status in ['Pending', 'Accepted', 'Rejected']:
+            application = get_object_or_404(JobApplication, pk=app_id, job=self.object)
+            application.status = new_status
+            application.save()
+            messages.success(request, f"Application status updated to {new_status}.")
+        else:
+            messages.error(request, "Invalid application or status.")
+
+        return redirect('commissions:job-details', pk=self.object.pk)
 
 def apply_to_job(request, pk):
     print("Applying to job with ID:", pk)  # Debugging line
