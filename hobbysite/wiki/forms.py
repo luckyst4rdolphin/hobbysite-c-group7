@@ -1,5 +1,5 @@
 from django import forms
-from .models import Article
+from .models import Article, Comment
  
 class ArticleCreateForm(forms.ModelForm):
     '''
@@ -36,3 +36,15 @@ class ArticleUpdateForm(forms.ModelForm):
         '''
         model = Article
         fields = ['title', 'category', 'entry', 'header_image', 'updated_on']
+
+class CommentForm(forms.ModelForm):
+    '''
+    @authors : Antonth Chrisdale C. Lopez
+    
+    This class contains the form for creating Comments
+
+    '''
+    entry = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'Add a comment',}))
+    class Meta:
+        model = Comment
+        fields = ['entry']
