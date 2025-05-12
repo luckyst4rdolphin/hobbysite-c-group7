@@ -4,6 +4,7 @@ from django.shortcuts import redirect
 from commissions.models import Commission, Job
 from commissions.forms import CommissionForm
 from django.db import models
+from django.db.models import Count, Q, Case, When, IntegerField
 
 class CommissionListView(ListView):
     '''
@@ -33,15 +34,18 @@ class CommissionListView(ListView):
         user = self.request.user
         
         # If the user is logged in, add two categories above the list:
-        if user.is_authenticated:
+        if user.is_authenticated and hasattr(user, 'profile'):
             # Get commissions created by the logged-in user
-            my_commissions = Commission.objects.filter(author=user)
+            my_commissions = Commission.objects.filter(author=user.profile)
             
             # Get commissions the user has applied to
-            applied_commissions = Commission.objects.filter(job__jobapplication__applicant=user)
+            applied_commissions = Commission.objects.filter(job__jobapplication__applicant=user.profile).distinct()
 
             context['my_commissions'] = my_commissions
             context['applied_commissions'] = applied_commissions
+        else:
+            context['my_commissions'] = Commission.objects.none()
+            context['applied_commissions'] = Commission.objects.none()
 
         return context
 
@@ -56,7 +60,12 @@ class CommissionDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         # Filter jobs by the current commission
         commission = self.object
-        context['jobs'] = Job.objects.filter(commission=commission)
+
+        # Annotate accepted count for each job
+        jobs = Job.objects.filter(commission=commission).annotate(
+            accepted_count=Count('jobapplication', filter=Q(jobapplication__status='Accepted'))
+        )
+        context['jobs'] = jobs
         return context
 
 class CommissionCreateView(LoginRequiredMixin, CreateView):
