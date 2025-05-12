@@ -27,7 +27,7 @@ class ProfileEdit(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('user_management:update_profile')
 
     def get_object(self):
-        profile, created = Profile.objects.get_or_create(user=self.request.user)
+        profile = Profile.objects.get_or_create(user=self.request.user)
         return profile
 
     def form_valid(self, form):
