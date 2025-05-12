@@ -8,7 +8,7 @@
     <h2>My Cart</h2>
     <ul>
         {% for item in cart_items %}
-            <li>{{ item.product.name }} - Owner: {{ item.product.owner }}</li>
+            <li>{{ item.product.name }} - Owner: {{ item.product.owner }} <small><i>({{ item.amount }} pc/s.)</i></small></li>
         {% empty %}
             <li>No products on cart.</li>
         {% endfor %}
