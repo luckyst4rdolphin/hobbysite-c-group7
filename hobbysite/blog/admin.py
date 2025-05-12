@@ -24,7 +24,5 @@ class ArticleAdmin(admin.ModelAdmin):
     list_display = ('title', 'category', 'entry', 'created_on', 'updated_on')
     inlines = [CommentInline,]
 
-
-
 admin.site.register(ArticleCategory, ArticleCategoryAdmin)
 admin.site.register(Article, ArticleAdmin)
