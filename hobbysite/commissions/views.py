@@ -66,7 +66,7 @@ class CommissionCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         # Assign the logged-in user’s profile as the author
-        form.instance.author = self.request.use.profile
+        form.instance.author = self.request.user.profile
         return super().form_valid(form)
 
 class CommissionUpdateView(LoginRequiredMixin, UpdateView):
