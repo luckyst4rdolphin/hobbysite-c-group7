@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from user_management.models import Profile
 
 class ArticleCategory(models.Model):
     '''
@@ -36,13 +37,19 @@ class Article(models.Model):
     @authors : Antonth Chrisdale C. Lopez
     
     This class is the model class for Article
-    This contains the specified parameters for title, category,
-    entry, created_on, and updated_on required in the specs of 
-    the project.
+    This contains the specified parameters for title, author,
+    category, entry, created_on, and updated_on required in 
+    the specs of the project.
 
     '''
 
     title = models.CharField(max_length=255)
+    author = models.ForeignKey(
+        Profile,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        )
     category = models.ForeignKey(
         ArticleCategory, 
         on_delete=models.SET_NULL,
@@ -50,6 +57,7 @@ class Article(models.Model):
         null=True,
         )
     entry = models.TextField()
+    header_image = models.ImageField(null=False, upload_to="images/")
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 
@@ -58,9 +66,9 @@ class Article(models.Model):
         @authors : Antonth Chrisdale C. Lopez
     
         This class is the model class for Article
-        This contains the specified parameters for title, category,
-        entry, created_on, and updated_on required in the specs of 
-        the project.
+        This contains the specified parameters for title, author,
+        category, entry, created_on, and updated_on required in 
+        the specs of the project.
 
         '''
         ordering = ['-created_on']
@@ -70,7 +78,7 @@ class Article(models.Model):
         @fn __str__
         @brief returns the title of the object
         '''
-        return self.title
+        return self.entry
     
     def get_absolute_url(self):
         '''
@@ -78,3 +86,40 @@ class Article(models.Model):
         @brief returns url of the article
         '''
         return reverse('wiki:article-detail', args=[self.pk])
+
+class Comment(models.Model):
+    '''
+    @authors : Antonth Chrisdale C. Lopez
+    
+    This class is the model class for Comment
+    This contains the specified parameters for author, article,
+    entry, created_on, and updated_on required in the specs 
+    of the project.
+
+    '''
+    author = models.ForeignKey(
+        Profile,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        )
+    article = models.ForeignKey(
+        Article, 
+        on_delete=models.CASCADE,
+        )
+    entry = models.TextField()
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        '''
+        @authors : Antonth Chrisdale C. Lopez
+   
+        This class is the model class for Comment
+        This contains the specified parameters for author, article,
+        entry, created_on, and updated_on required in the specs 
+        of the project.
+
+        '''
+        ordering = ['created_on']
+
