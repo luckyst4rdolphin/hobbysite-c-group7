@@ -2,12 +2,14 @@
 
 {% block title %}Article Categories{% endblock %}
 {% block content %}
-    <h1>My Wiki Articles</h1>
-    {% for article in articles %}
-        {% if article.author.name == user.profile.name %}
-            <li><a href='{{ article.get_absolute_url }}'> {{ article.title }} </a></li>
-        {% endif %}
-    {% endfor %}
+    {% if user.is_authenticated %}
+        <h1>My Wiki Articles</h1>
+        {% for article in articles %}
+            {% if article.author.name == user.profile.name %}
+                <li><a href='{{ article.get_absolute_url }}'> {{ article.title }} </a></li>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
     <a href="/wiki/article/add/"><button>Create Article</button></a>
     <h1>Other Wiki Articles</h1>
     <ul>
