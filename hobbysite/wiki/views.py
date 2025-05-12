@@ -1,9 +1,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import ModelFormMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from user_management.models import Profile
 from wiki.models import Article, ArticleCategory, Comment
 from .forms import ArticleCreateForm, CommentForm
-from user_management.models import Profile
 from django.urls import reverse_lazy
 
 class ArticleListView(LoginRequiredMixin, ListView):
