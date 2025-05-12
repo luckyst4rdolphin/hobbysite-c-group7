@@ -29,7 +29,7 @@
     <h2>Read similar articles here:</h2>
     {% for all_article in articles %}
         {% if all_article.category.name == article.category.name and all_article.title != article.title %}
-            <li><a href='{{ all_article.get_absolute_url }}'>{{ all.title }}</a></li>
+            <li><a href='{{ all_article.get_absolute_url }}'>{{ all_article.title }}</a></li>
         {% endif %}
     {% endfor %}
 {% endblock %}
