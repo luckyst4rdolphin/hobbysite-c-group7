@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Cart{% endblock %}
+{% block header %}Merchandise Store{% endblock %}
+
+{% block content %}
+    <h2>My Cart</h2>
+    <ul>
+        {% for item in cart_items %}
+            <li>{{ item.product.name }} - Owner: {{ item.product.owner }}</li>
+        {% empty %}
+            <li>No products on cart.</li>
+        {% endfor %}
+    </ul>
+
+    <p>
+        <a href="{% url 'merchstore:merch_list' %}">
+            <button>Back to Merch Store</button>
+        </a>
+    </p>
+{% endblock %}

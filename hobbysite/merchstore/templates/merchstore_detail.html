@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }}{% endblock %}
+{% block header %}Merchandise Store{% endblock %}
+
+{% block content %}
+    {% if product %}
+        <h2>{{ product.name }}</h2>
+        <p><b>Owner:</b> {{ product.owner.name }}</p>
+        <p><b>Type:</b> {{ product.product_type.name }}</p>
+        <p><b>Description: </b><i>{{ product.description }}</i></p>
+        <p><b>Price:</b> ₱{{ product.price }}</p>
+        <p><b>Stock:</b> {{ product.stock }}</p>
+        <p><b>Status:</b> {{ product.status }}</p>
+
+    {% if request.user.profile == product.owner %}
+        <p><b><i>Note: You own this product.</i></b></p>
+        <a href="{% url 'merchstore:merch_update' product.pk %}">
+            <button>Edit Product</button>
+        </a>
+    {% else %}
+        <p><b>Buy Product:</b></p>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_div }}
+            {% if product.stock > 0 %}
+                <button type="submit" id="submit-btn">Add to Cart</button>
+            {% else %}
+                <button type="submit" disabled>Out of Stock</button>
+            {% endif %}
+        </form>
+    {% endif %}
+
+    <p>
+        <a href="{% url 'merchstore:merch_list' %}">
+            <button>Back to Merch Store</button>
+        </a>
+    </p>
+    {% endif %}
+{% endblock %}

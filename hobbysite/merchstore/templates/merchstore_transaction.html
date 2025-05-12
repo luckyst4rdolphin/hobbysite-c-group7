@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Transactions{% endblock %}
+{% block header %}Merchandise Store{% endblock %}
+
+{% block content %}
+    <h2>My Transactions</h2>
+    <ul>
+        {% for item in transaction_items %}
+            <li>{{ item.product.name }} - Buyer: {{ item.buyer }} <small><i>({{ item.created_on }})</i></small></li>
+        {% empty %}
+            <li>No products sold.</li>
+        {% endfor %}
+    </ul>
+
+    <p>
+        <a href="{% url 'merchstore:merch_list' %}">
+            <button>Back to Merch Store</button>
+        </a>
+    </p>
+{% endblock %}
