@@ -7,7 +7,7 @@ class ThreadForm(forms.ModelForm):
         fields = ['title', 'category', 'entry']
 
 
-class CommmentForm(forms.ModelForm):
+class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['entry']
