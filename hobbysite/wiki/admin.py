@@ -31,7 +31,7 @@ class ArticleAdmin(admin.ModelAdmin):
     '''
     model = Article
 
-    list_display = ('title', 'category', 'entry', 'header_image')
+    list_display = ('title', 'category', 'entry', 'created_on', 'updated_on')
     inlines = [CommentInline,]
 
 admin.site.register(ArticleCategory, ArticleCategoryAdmin)

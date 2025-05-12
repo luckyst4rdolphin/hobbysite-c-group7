@@ -98,7 +98,7 @@ class Comment(models.Model):
 
     '''
     author = models.ForeignKey(
-        'Profile',
+        Profile,
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
@@ -106,8 +106,6 @@ class Comment(models.Model):
     article = models.ForeignKey(
         Article, 
         on_delete=models.CASCADE,
-        blank=True,
-        null=True,
         )
     entry = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
