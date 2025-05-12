@@ -109,7 +109,7 @@ class MerchCartView(ListView):
         context = super().get_context_data(**kwargs)
         user_profile = self.request.user.profile
 
-        context['cart_items'] = Transaction.objects.filter(buyer=user_profile)
+        context['cart_items'] = Transaction.objects.filter(buyer=user_profile).order_by('product__owner')
         return context
 
 class MerchTransactionView(ListView):
@@ -121,5 +121,5 @@ class MerchTransactionView(ListView):
         context = super().get_context_data(**kwargs)
         user_profile = self.request.user.profile
 
-        context['transaction_items'] = Transaction.objects.filter(product__owner=user_profile)
+        context['transaction_items'] = Transaction.objects.filter(product__owner=user_profile).order_by('buyer')
         return context
