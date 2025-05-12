@@ -6,7 +6,7 @@
     <h1>{{ article.title }}</h1>
     {% if article.author.name == user.profile.name %}
         <div>
-            <a href=""><button>Edit article</button></a>
+            <a href="{{article.get_absolute_url}}edit"><button>Edit article</button></a>
         </div>
     {% endif %}
     <div class="date-time">
@@ -24,13 +24,14 @@
         {% endif %}
     {% endfor %}
     <br>
-    <br>
-    <h3>Add a comment:</h3>
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ comment_form.as_p }}
-        <button type="submit">Save</button>
-    </form>
+    {% if user.is_authenticated %}
+        <h3>Add a comment:</h3>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ comment_form.as_p }}
+            <button type="submit">Save</button>
+        </form>
+    {% endif %}
     <br>
     <h3>Comments</h3>
     {% for article_comment in comments %}
