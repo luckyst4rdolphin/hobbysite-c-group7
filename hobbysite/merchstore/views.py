@@ -8,24 +8,32 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class MerchListView(LoginRequiredMixin, ListView):
+class MerchListView(ListView):
     model = Product
     template_name = 'merchstore_list.html'
-    context_object_name = 'all_products'  # this will be all products except user's
+    context_object_name = 'all_products'
 
     def get_queryset(self):
-        # Exclude products owned by the logged-in user
-        return Product.objects.exclude(owner=self.request.user.profile)
+        # If the user is authenticated, exclude their own products
+        if self.request.user.is_authenticated:
+            return Product.objects.exclude(owner=self.request.user.profile)
+        else:
+            all_products = Product.objects.all()
+            return all_products
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        user_profile = self.request.user.profile
 
-        context['user_products'] = Product.objects.filter(owner=user_profile)
-        context['product_types'] = ProductType.objects.prefetch_related('products')
-        context['create_product_url'] = reverse('merchstore:merch_create')  # assumes named URL exists
+        if self.request.user.is_authenticated:
+            user_profile = self.request.user.profile
+            context['user_products'] = Product.objects.filter(owner=user_profile)
+            context['product_types'] = ProductType.objects.all()
+            context['create_product_url'] = reverse('merchstore:merch_create')
+        else:
+            context['user_products'] = [] 
+            context['product_types'] = ProductType.objects.all()
+
         return context
-
 
 class MerchDetailView(DetailView):
     '''
@@ -44,6 +52,9 @@ class MerchDetailView(DetailView):
     
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
+        if not request.user.is_authenticated:
+            return redirect('login')
+        
         form = TransactionForm(request.POST)
         if form.is_valid():
             transaction = form.save(commit=False)
@@ -65,7 +76,7 @@ class MerchDetailView(DetailView):
                 form.add_error('amount', "Not enough stock available.")
         return self.render_to_response(self.get_context_data(form=form))
 
-class MerchCreateView(CreateView):
+class MerchCreateView(LoginRequiredMixin, CreateView):
     model = Product
     form_class = ProductForm
     template_name = 'merchstore_create.html'
@@ -83,7 +94,7 @@ class MerchCreateView(CreateView):
     def get_success_url(self):
         return reverse_lazy('merchstore:merch_list')
 
-class MerchUpdateView(UpdateView):
+class MerchUpdateView(LoginRequiredMixin, UpdateView):
     model = Product
     form_class = ProductForm
     template_name = 'merchstore_update.html'
@@ -100,7 +111,7 @@ class MerchUpdateView(UpdateView):
     def get_success_url(self):
         return reverse_lazy('merchstore:merch_detail', args=[self.object.pk])
 
-class MerchCartView(ListView):
+class MerchCartView(LoginRequiredMixin, ListView):
     model = Transaction
     template_name = 'merchstore_cart.html'
     context_object_name = 'cart_items'
@@ -112,7 +123,7 @@ class MerchCartView(ListView):
         context['cart_items'] = Transaction.objects.filter(buyer=user_profile).order_by('product__owner')
         return context
 
-class MerchTransactionView(ListView):
+class MerchTransactionView(LoginRequiredMixin, ListView):
     model = Transaction
     template_name = 'merchstore_transaction.html'
     context_object_name = 'transaction_items'
