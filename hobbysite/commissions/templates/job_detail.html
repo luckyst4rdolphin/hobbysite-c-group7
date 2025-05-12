@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Job Detail{% endblock %}
+
+{% block content %}
+<h1>{{ job.role }}</h1>
+<div>
+    <strong>Status:</strong> {{ job.status }}<br>
+    <strong>Manpower Required:</strong> {{ job_total_manpower_required }}<br>
+    <strong>Open Slots:</strong> {{ job_total_open_slots }}<br>
+</div>
+
+<h2>Applicants</h2>
+
+<ul>
+    {% for application in applicants %}
+    <li>
+        {{ application.applicant.name }} - Status: {{ application.status }}
+        <form method="post" action="{% url 'commissions:job-details' application.pk %}"style="display:inline;">
+            {% csrf_token %}
+            {% if user == commission.author %}
+            <select name="status">
+                <option value="Pending" {% if application.is_pending %}selected{% endif %}>Pending</option>
+                <option value="Accepted" {% if application.is_accepted %}selected{% endif %}>Accept</option>
+                <option value="Rejected" {% if application.is_rejected %}selected{% endif %}>Reject</option>
+            </select>
+            <button type="submit">Update</button>
+            {% else %}
+            <p>You must be the commission owner to manage applicants.</p>
+            {% endif %}
+        </form>
+    </li>
+    {% empty %}
+    <li>No applicants yet.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

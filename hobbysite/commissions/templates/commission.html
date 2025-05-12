@@ -1,17 +1,62 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title%}Commission{% endblock %}
+{% block title %}Commission{% endblock %}
+
 {% block content %}
+
 <h1>{{ commission.title }}</h1>
 <div class="date-time">
-    <small>Created on: {{ commission.created_on }}</small>
+    <small>Status: {{ commission.status }}</small><br>
+    <small>Created on: {{ commission.created_on }}</small><br>
     <small>Updated on: {{ commission.updated_on }}</small>
 </div>
-{% for comment in comments %}
-    {% if commission.title == comment.commission.title %}
-        <p>{{ comment.entry }}</p> 
-    {% endif %}
-{% endfor %}
+
+<p>{{ commission.description }}</p>
+
+<h1>Jobs</h1>
+{% with total=0 open=0 %}
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>
+            <b style="color:blue">{{ message }}</b>
+        </li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<ul>
+    {% for job in jobs %}
+    <li>
+        <strong>{{ job.role }}</strong> ({{ job.status }})<br>
+        Manpower Required: {{ job.manpower_required }}<br>
+        Open Slots: {{ job.open_slots }}<br>
+    
+        {% if user.is_authenticated %}
+            {% if job.open_slots > 0 %}
+                <form method="post" action="{% url 'commissions:job-apply' job.pk %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit">Apply to Job</button>
+                </form>
+            {% else %}
+                <button type="submit" disabled>Apply to Job</button>
+            {% endif %}
+            <p><a href="{% url 'commissions:commissions-update' commission.pk %}">Show all applicants</a></p>
+        {% else %}
+            <p><a href="{% url 'login' %}">Log in to apply</a></p>
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% endwith %}
+
+<p><strong>Total Manpower Required:</strong> {{ job_total_manpower_required }}</p>
+<p><strong>Total Open Slots:</strong> {{ job_total_open_slots }}</p>
+
+{% if user.is_authenticated and user.profile == commission.author %}
+<a href="{% url 'commissions:commissions-update' commission.pk %}">Edit this Commission</a>
+{% endif %}
 
 {% endblock %}
