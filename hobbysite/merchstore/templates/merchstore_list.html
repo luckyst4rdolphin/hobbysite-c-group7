@@ -4,28 +4,54 @@
 
 {% block content %}
     <h1>Merchandise Store</h1>
-    <h2>Your Products</h2>
-    <a href="/merchstore/transactions"><button>My Transactions</button></a>
-    <a href="/merchstore/item/add"><button>Add Product</button></a>
-    <ul>
-        {% for product in user_products %}
-            <li><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></li>
-        {% empty %}
-            <li>No products posted by you.</li>
+    {% if user.is_authenticated %}
+        <h2>Your Products</h2>
+        <a href="/merchstore/transactions"><button>My Transactions</button></a>
+        <a href="/merchstore/item/add"><button>Add Product</button></a>
+        {% for product_type in product_types %}
+            <h3>{{ product_type.name }}</h3>
+            <ul>
+                {% for product in user_products %}
+                    {% if product.product_type == product_type %}
+                        <li><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></li>
+                    {% endif %}
+                {% empty %}
+                    <li>No products posted by you.</li>
+                {% endfor %}
+            </ul>
         {% endfor %}
-    </ul>
 
-    <hr>
+        <hr>
 
-    <h2>All Products</h2>
-    <a href="/merchstore/cart"><button>My Cart</button></a>
-    <ul>
-        {% for product in all_products %}
-            <li><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></li>
-        {% empty %}
-            <li>No other products available.</li>
+        <h2>All Products</h2>
+        <a href="/merchstore/cart"><button>My Cart</button></a>
+        {% for product_type in product_types %}
+            <h3>{{ product_type.name }}</h3>
+        <ul>
+            {% for product in all_products %}
+            {% if product.product_type == product_type %}
+                <li><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></li>
+            {% endif %}
+            {% empty %}
+                <li>No other products available.</li>
+            {% endfor %}
+        </ul>
         {% endfor %}
-    </ul>
+    {% else %}
+        <h2>All Products</h2>
+        {% for product_type in product_types %}
+            <h3>{{ product_type.name }}</h3>
+        <ul>
+            {% for product in all_products %}
+                {% if product.product_type == product_type %}
+                    <li><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></li>
+                {% endif %}
+            {% empty %}
+                <li>No other products available.</li>
+            {% endfor %}
+        </ul>
+        {% endfor %}
+    {% endif %}
 
 
     <!-- <h2>Available Merchandise</h2>

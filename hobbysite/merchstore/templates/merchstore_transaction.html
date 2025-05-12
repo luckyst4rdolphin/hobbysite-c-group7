@@ -6,7 +6,7 @@
     <h1>My Transactions</h1>
     <ul>
         {% for item in transaction_items %}
-            <li>{{ item.product.name }} - Buyer: {{ item.buyer }}</li>
+            <li>{{ item.product.name }} - Buyer: {{ item.buyer }} <small><i>({{ item.created_on }})</i></small></li>
         {% empty %}
             <li>No products.</li>
         {% endfor %}
