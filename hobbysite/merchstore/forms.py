@@ -16,6 +16,7 @@ class TransactionForm(forms.ModelForm):
     Restricts amount to a minimum value of 1.
     '''
     amount = forms.IntegerField(min_value=1)
+    
     class Meta:
         model = Transaction
         fields = ['amount']
