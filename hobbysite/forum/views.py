@@ -3,7 +3,7 @@ from forum.models import ThreadCategory, Thread, Comment
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import render, redirect
-from .forms import ThreadForm
+from .forms import ThreadForm, CommentForm
 
 class ThreadListView(LoginRequiredMixin, ListView):
     """
@@ -54,7 +54,36 @@ class ThreadDetailView(LoginRequiredMixin, DetailView):
         comments = Comment.objects.filter(thread=self.object).order_by('created_on')
         context['comments'] = comments
 
+        # Add a link to go back to the thread list view
+        context['back_to_list_url'] = reverse('forum:thread-list')
+
+        # Add edit link if the user is the author of the thread
+        if self.object.author == self.request.user.profile:
+            context['edit_url'] = reverse('forum:thread-edit', args=[self.object.pk])
+
         return context
+
+    def post(self, request, *args, **kwargs):
+        """
+        Handle comment form submission.
+        """
+        thread = self.get_object()
+        form = CommentForm(request.POST)
+
+        if form.is_valid():
+            # Associate the comment with the thread and the logged-in user
+            form.instance.thread = thread
+            form.instance.author = request.user.profile
+            form.save()
+
+            # Redirect back to the thread detail page
+            return redirect('forum:thread-detail', pk=thread.pk)
+
+        # If the form is invalid, re-render the thread detail view with the form errors
+        context = self.get_context_data(**kwargs)
+        context['comment_form'] = form
+        return self.render_to_response(context)
+
 
 class ThreadCreateView(LoginRequiredMixin, CreateView):
 
