@@ -2,17 +2,52 @@
 
 {% block content %}
 <h2>Commissions</h2>
+
+{% if user.is_authenticated %}
+    <h3>My Commissions</h3>
+    <ul>
+        {% for commission in my_commissions %}
+            <li>
+                <strong>{{ commission.title }}</strong><br>
+                Required: {{ commission.job_total_manpower_required }} people<br>
+                Posted on: {{ commission.created_on|date:"M d, Y" }}<br>
+                <a href="{% url 'commissions:commissions-detail' commission.pk %}">View details</a>
+            </li>
+        {% empty %}
+            <li>You have not created any commissions yet.</li>
+        {% endfor %}
+    </ul>
+
+    <h3>Commissions I've Applied To</h3>
+    <ul>
+        {% for commission in applied_commissions %}
+            <li>
+                <strong>{{ commission.title }}</strong><br>
+                Required: {{ commission.job_total_manpower_required }} people<br>
+                Posted on: {{ commission.created_on|date:"M d, Y" }}<br>
+                <a href="{% url 'commissions:commissions-detail' commission.pk %}">View details</a>
+            </li>
+        {% empty %}
+            <li>You haven't applied to any commissions yet.</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+<h3>All Commissions</h3>
 <ul>
     {% for commission in commissions %}
-    <li>
-        <strong>{{ commission.title }}</strong><br>
-        Required: {{ commission.job_total_manpower_required }} people<br>
-        Posted by: {{ commission.author.name }}<br>
-        Posted on: {{ commission.created_on|date:"M d, Y" }}<br>
-        <a href="{% url 'commissions:commissions-detail' commission.pk %}">View details</a>
-    </li>
+        <li>
+            <strong>{{ commission.title }}</strong><br>
+            Required: {{ commission.job_total_manpower_required }} people<br>
+            Posted by: {{ commission.author.name }}<br>
+            Posted on: {{ commission.created_on|date:"M d, Y" }}<br>
+            <a href="{% url 'commissions:commissions-detail' commission.pk %}">View details</a>
+        </li>
     {% empty %}
-    <li>No commissions available at the moment.</li>
+        <li>No commissions available at the moment.</li>
     {% endfor %}
 </ul>
+
+<p><a href="{% url 'commissions:commissions-create' %}">Create New Commission</a></p>
+
 {% endblock %}
