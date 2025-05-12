@@ -28,7 +28,7 @@ class ArticleListView(LoginRequiredMixin, ListView):
         context['profile'] = Profile.objects.all
         return context
 
-class ArticleDetailView(LoginRequiredMixin, DetailView):
+class ArticleDetailView(LoginRequiredMixin, DetailView, ModelFormMixin):
     '''
     @authors : Antonth Chrisdale C. Lopez
     
