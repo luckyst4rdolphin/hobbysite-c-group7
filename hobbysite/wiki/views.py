@@ -4,7 +4,7 @@ from wiki.models import Article, ArticleCategory, Comment
 from .forms import ArticleCreateForm, ArticleUpdateForm
 from user_management.models import Profile
 
-class ArticleListView(ListView):
+class ArticleListView(LoginRequiredMixin, ListView):
     '''
     @authors : Antonth Chrisdale C. Lopez
     
@@ -26,7 +26,7 @@ class ArticleListView(ListView):
         context['profile'] = Profile.objects.all
         return context
 
-class ArticleDetailView(DetailView):
+class ArticleDetailView(LoginRequiredMixin, DetailView):
     '''
     @authors : Antonth Chrisdale C. Lopez
     
