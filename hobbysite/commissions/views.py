@@ -104,19 +104,25 @@ class CommissionUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "commission_form.html"
 
     def form_valid(self, form):
-        response = super().form_valid(form)
+        # Save the form first but don't commit to DB yet
+        self.object = form.save(commit=False)
 
-        # Only update to 'Full' if the commission is currently 'Open'
-        if self.object.status == 'Open':
-            jobs = Job.objects.filter(commission=self.object)
-            if jobs.exists():
-                if (job.status == 'Full' for job in jobs):
-                    self.object.status = 'Full'
-                if job.total_manpower_required <= 0:
-                    self.object.status = 'Full'
-            self.object.save()
+        # Get all related jobs and annotate accepted_count
+        jobs = Job.objects.filter(commission=self.object).annotate(
+            accepted_count=Count('jobapplication', filter=Q(jobapplication__status='Accepted'))
+        )
 
-        return response
+        # Check if all jobs are full (no open slots)
+        all_jobs_filled = all(job.manpower_required <= job.accepted_count for job in jobs)
+
+        # If all jobs are full, set the commission status to 'Full'
+        if all_jobs_filled:
+            self.object.status = 'Full'
+
+        # Save the object to the DB
+        self.object.save()
+
+        return super().form_valid(form)
 
 def apply_to_job(request, pk):
     print("Applying to job with ID:", pk)  # Debugging line
