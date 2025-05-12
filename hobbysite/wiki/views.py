@@ -6,7 +6,7 @@ from wiki.models import Article, ArticleCategory, Comment
 from .forms import ArticleCreateForm, CommentForm
 from django.urls import reverse_lazy
 
-class ArticleListView(LoginRequiredMixin, ListView):
+class ArticleListView(ListView):
     '''
     @authors : Antonth Chrisdale C. Lopez
     
