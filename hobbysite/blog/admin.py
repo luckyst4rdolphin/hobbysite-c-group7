@@ -10,6 +10,9 @@ class ArticleCategoryAdmin(admin.ModelAdmin):
     list_display = ('name', )
 
 class CommentInline(admin.StackedInline):
+    '''
+    This keeps the comment model with the article model.
+    '''
     model = Comment
     
 class ArticleAdmin(admin.ModelAdmin):

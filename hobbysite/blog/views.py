@@ -59,7 +59,9 @@ class ArticleDetailView(DetailView, ModelFormMixin):
         return super(ArticleDetailView, self).form_valid(form)
 
 class ArticleCreateView(LoginRequiredMixin, CreateView):
-
+    '''
+    Creates base view for new article form.
+    '''
     model = Article
     template_name = "article_form.html"
     form_class = ArticleForm
@@ -75,7 +77,9 @@ class ArticleCreateView(LoginRequiredMixin, CreateView):
         return context
     
 class ArticleUpdateView(LoginRequiredMixin, UpdateView):
-
+    '''
+    Creates base view for updating an article.
+    '''
     model = Article
     template_name = "article_form.html"
     form_class = ArticleForm
