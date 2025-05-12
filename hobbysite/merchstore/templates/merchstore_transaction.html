@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}My Transactions{% endblock %}
 {% block header %}Merchandise Store{% endblock %}
@@ -9,7 +10,7 @@
         {% for item in transaction_items %}
             <li>{{ item.product.name }} - Buyer: {{ item.buyer }} <small><i>({{ item.created_on }})</i></small></li>
         {% empty %}
-            <li>No products.</li>
+            <li>No products sold.</li>
         {% endfor %}
     </ul>
 

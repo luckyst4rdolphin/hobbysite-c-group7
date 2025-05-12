@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Merchandise Store{% endblock %}
 
@@ -6,8 +7,8 @@
     <h1>Merchandise Store</h1>
     {% if user.is_authenticated %}
         <h2>Your Products</h2>
-        <a href="/merchstore/transactions"><button>My Transactions</button></a>
-        <a href="/merchstore/item/add"><button>Add Product</button></a>
+        <a href="{% url 'merchstore:merch_transaction' %}"><button>My Transactions</button></a>
+        <a href="{% url 'merchstore:merch_create' %}"><button>Add Product</button></a>
         {% for product_type in product_types %}
             <h3>{{ product_type.name }}</h3>
             <ul>
@@ -24,7 +25,7 @@
         <hr>
 
         <h2>All Products</h2>
-        <a href="/merchstore/cart"><button>My Cart</button></a>
+        <a href="{% url 'merchstore:merch_cart' %}"><button>My Cart</button></a>
         {% for product_type in product_types %}
             <h3>{{ product_type.name }}</h3>
         <ul>
@@ -52,33 +53,6 @@
         </ul>
         {% endfor %}
     {% endif %}
-
-
-    <!-- <h2>Available Merchandise</h2>
-    <a href="/merchstore/item/add"><button>Add Product</button></a>
-
-    {% if product_types %}
-        <ul>
-            {% for product_type in product_types %}
-                <li>
-                    <b>{{ product_type.name }}</b>
-                    <ul>
-                        {% if product_type.products.all %}
-                            {% for product in product_type.products.all %}
-                                <li>
-                                    <a href="{{ product.get_absolute_url }}">{{ product.name }}</a> - ₱{{ product.price }}
-                                </li>
-                            {% endfor %}
-                        {% else %}
-                            <li>No merchandise available under this type.</li>
-                        {% endif %}
-                    </ul>
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No merchandise available.</p>
-    {% endif %} -->
 
     <p>
         <a href="{% url 'home' %}"><button>Back to Home</button></a>
