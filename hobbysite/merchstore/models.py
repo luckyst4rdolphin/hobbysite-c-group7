@@ -1,7 +1,6 @@
 from django.db import models
 from django.urls import reverse
 from user_management.models import Profile
-from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class ProductType(models.Model):
@@ -48,11 +47,11 @@ class Product(models.Model):
     )
     description = models.TextField()
     price = models.DecimalField(max_digits = 50, decimal_places = 2)
-    stock = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
+    stock = models.PositiveIntegerField(default=0)
     status = models.CharField(
-        max_length=20,
-        choices=STATUS_CHOICES,
-        default="Available"
+        max_length = 20,
+        choices = STATUS_CHOICES,
+        default = "Available"
     )
 
     class Meta:
@@ -91,17 +90,17 @@ class Transaction(models.Model):
 
     buyer = models.ForeignKey(
         Profile,
-        null=True,
-        on_delete=models.SET_NULL
+        null = True,
+        on_delete = models.SET_NULL
     )
     product = models.ForeignKey(
         Product,
-        null=True,
-        on_delete=models.SET_NULL
+        null = True,
+        on_delete = models.SET_NULL
     )
     amount = models.PositiveIntegerField(default=1)
     status = models.CharField(
-        max_length=20,
-        choices=STATUS_CHOICES
+        max_length = 20,
+        choices = STATUS_CHOICES
     )
     created_on = models.DateTimeField(auto_now_add=True)
