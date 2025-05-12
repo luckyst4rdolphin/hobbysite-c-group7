@@ -49,6 +49,7 @@ class Article(models.Model):
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
+        related_name="wiki_articles" 
         )
     category = models.ForeignKey(
         ArticleCategory, 
@@ -102,6 +103,7 @@ class Comment(models.Model):
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
+        related_name="wiki_comments" 
         )
     article = models.ForeignKey(
         Article, 
