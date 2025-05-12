@@ -1,8 +1,10 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic.edit import ModelFormMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from wiki.models import Article, ArticleCategory, Comment
-from .forms import ArticleCreateForm, ArticleUpdateForm
+from .forms import ArticleCreateForm, ArticleUpdateForm, CommentForm
 from user_management.models import Profile
+from django.urls import reverse_lazy
 
 class ArticleListView(LoginRequiredMixin, ListView):
     '''
@@ -36,6 +38,50 @@ class ArticleDetailView(LoginRequiredMixin, DetailView):
     context_object_name = 'article'
     model = Article
     template_name = 'wiki_article.html'
+    form_class = CommentForm
+    initial = {'entry':'Add a comment'}
+
+    def get_success_url(self):
+        '''
+        @fn get_success_url
+        @brief returns the url for the article
+        '''
+        return reverse_lazy('wiki:article-detail', kwargs={'pk': self.object.article.pk})
+
+    def get_context_data(self, **kwargs):
+        '''
+        @fn get_context_data
+        @brief returns the context for the article
+        '''
+        context = super().get_context_data(**kwargs)
+        context['articles'] = Article.objects.all().order_by('-created_on')
+        context['comment_form'] = context['form']
+        context['comments'] = Comment.objects.filter(article=self.object)
+        context['user'] = self.request.user
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        '''
+        @fn post
+        @brief checks whether the form is valid or invalid
+        '''
+        form = self.get_form()
+        self.object = self.get_object()
+
+        if form.is_valid():
+            return self.form_valid(form)
+        return self.form_invalid(form)
+        
+    def form_valid(self, form):
+        '''
+        @fn form_valid
+        @brief makes the form valid
+        '''
+        new_comment = form.save(commit=False)
+        new_comment.article = self.object
+        new_comment.author = self.request.user.profile
+        new_comment.save()
+        return super(ArticleDetailView, self).form_valid(form)
 
 class ArticleCreateView(LoginRequiredMixin, CreateView):
     '''
@@ -47,13 +93,21 @@ class ArticleCreateView(LoginRequiredMixin, CreateView):
     model = Article
     template_name = 'article_form.html'
     form_class = ArticleCreateForm
-    success_url = '/wiki/article/add'
+    success_url = reverse_lazy('wiki:article-list')
 
     def form_valid(self, form):
+        '''
+        @fn form_valid
+        @brief makes the form valid
+        '''
         form.instance.author = self.request.user.profile
         return super().form_valid(form)
     
     def get_context_data(self, **kwargs):
+        '''
+        @fn get_context_data
+        @brief returns the context for the article
+        '''
         context = super(ArticleCreateView, self).get_context_data(**kwargs)
         context['article_form'] = context['form']
         return context
@@ -69,13 +123,27 @@ class ArticleUpdateView(LoginRequiredMixin, UpdateView):
     model = Article
     template_name = 'article_update_form.html'
     form_class = ArticleUpdateForm
-    success_url = '/wiki/<int:pk>/1/edit' #TO DO
 
+    def get_success_url(self):
+        '''
+        @fn get_success_url
+        @brief returns the url for the article
+        '''
+        return reverse_lazy('wiki:article-detail', kwargs={'pk': self.object.pk})
+    
     def form_valid(self, form):
-        form.instance.author = self.request.user.profile
+        '''
+        @fn form_valid
+        @brief makes the form valid
+        '''
+        form.save()
         return super().form_valid(form)
     
     def get_context_data(self, **kwargs):
+        '''
+        @fn get_context_data
+        @brief returns the context for the article
+        '''
         context = super(ArticleUpdateView, self).get_context_data(**kwargs)
         context['article_update_form'] = context['form']
         return context
