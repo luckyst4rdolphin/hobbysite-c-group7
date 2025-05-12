@@ -20,7 +20,9 @@ class Commission(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(
         Profile,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
     )
 
     class Meta:
