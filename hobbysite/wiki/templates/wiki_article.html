@@ -2,7 +2,7 @@
 
 {% block title %}Article{% endblock %}
 {% block content %}
-<a href="/blog/articles/"><button>To Article List</button></a>
+<a href="/wiki/articles/"><button>To Article List</button></a>
     <h1>{{ article.title }}</h1>
     {% if article.author.name == user.profile.name %}
         <a href="{{article.get_absolute_url}}edit"><button>Edit article</button></a>
