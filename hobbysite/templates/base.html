@@ -8,10 +8,17 @@
 </head>
 <body>
     <header>
-        <form method="POST" action="{% url 'logout' %}">
-            {% csrf_token %}
-            <button type="submit">Logout</button>
-        </form>
+        {% if user.is_authenticated %}
+            <form method="POST" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+            </form>
+            <ul>
+                <li><a href="/profile/">My Profile</a></li>
+            </ul>
+        {% else %}
+            <a href="{% url 'login' %}"><button>Login</button></a>
+        {% endif %}
         <nav>
             <ul>
                 <li><a href="/blog/articles">Blog</a></li>
@@ -19,10 +26,10 @@
                 <li><a href="/forum/threads">Forum</a></li>
                 <li><a href="/merchstore/items">Merch Store</a></li>
                 <li><a href="/wiki/articles">Wiki</a></li>
-                <li><a href="/profile/">My Profile</a></li>
             </ul>
         </nav>
     </header>
+    
     <div id="content">
         {% block content %}{% endblock %}
     </div>
