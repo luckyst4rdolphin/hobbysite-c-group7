@@ -1,17 +1,52 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title%}Commission{% endblock %}
+{% block title %}Commission{% endblock %}
+
 {% block content %}
 <h1>{{ commission.title }}</h1>
 <div class="date-time">
-    <small>Created on: {{ commission.created_on }}</small>
+    <small>Status: {{ commission.status }}</small><br>
+    <small>Created on: {{ commission.created_on }}</small><br>
     <small>Updated on: {{ commission.updated_on }}</small>
 </div>
-{% for comment in comments %}
-    {% if commission.title == comment.commission.title %}
-        <p>{{ comment.entry }}</p> 
+
+<p>{{ commission.description }}</p>
+
+<h3>Jobs</h3>
+{% with total=0 open=0 %}
+<ul>
+    {% for job in jobs %}
+    {% if job.commission.id == commission.id %}
+    {% with accepted_count=job.jobapplication_set.filter(status='Accepted').count %}
+    <li>
+        <strong>{{ job.role }}</strong> ({{ job.status }})<br>
+        Manpower Required: {{ job.manpower_required }}<br>
+        Open Slots: {{ job.manpower_required|add:"-accepted_count" }}
+
+        {% if user.is_authenticated %}
+        {% if accepted_count < job.manpower_required %} <form method="post"
+            action="{% url 'commissions:apply-to-job' job.pk %}">
+            {% csrf_token %}
+            <button type="submit">Apply to Job</button>
+            </form>
+            {% else %}
+            <button disabled>Applications Full</button>
+            {% endif %}
+            {% endif %}
+    </li>
+    {% with total=total|add:job.manpower_required open=open|add:job.manpower_required|add:"-accepted_count" %}
+    {% endwith %}
+    {% endwith %}
     {% endif %}
-{% endfor %}
+    {% endfor %}
+</ul>
+<p><strong>Total Manpower Required:</strong> {{ total }}</p>
+<p><strong>Total Open Slots:</strong> {{ open }}</p>
+{% endwith %}
+
+{% if user == commission.author %}
+<a href="{% url 'commissions:commissions-edit' commission.pk %}">Edit this Commission</a>
+{% endif %}
 
 {% endblock %}
