@@ -35,4 +35,4 @@ class ArticleUpdateForm(forms.ModelForm):
 
         '''
         model = Article
-        fields = ['title', 'catgeory', 'entry', 'header_image', 'updated_on']
+        fields = ['title', 'category', 'entry', 'header_image', 'updated_on']
