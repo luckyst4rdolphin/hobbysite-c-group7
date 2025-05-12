@@ -3,7 +3,9 @@
 {% block title %}Article{% endblock %}
 {% block content %}
     <h1>{{ article.title }}</h1>
+    <small>Written by: {{ article.author }} </small>
     <small>Created on: {{ article.created_on }}</small>
     <small>Updated on: {{ article.updated_on }}</small>
+    <img src="{{ article.header_image.url }}">
     <p>{{ article.entry }}</p>
 {% endblock %}
