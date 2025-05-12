@@ -8,6 +8,7 @@
             <li><a href='{{ article.get_absolute_url }}'> {{ article.title }} </a></li>
         {% endif %}
     {% endfor %}
+    <a href="/wiki/article/add/"><button>Create Article</button></a>
     <h1>Other Wiki Articles</h1>
     <ul>
         {% for category in categories %}
