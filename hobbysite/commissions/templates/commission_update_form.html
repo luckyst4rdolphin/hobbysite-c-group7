@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Update Commission{% endblock %}
+
+{% block content %}
+<h2>Update Commission</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <p>Created on: {{ object.created_on }}</p>
+    <p>Updated on: {{ object.updated_on }}</p>
+    <button type="submit">Update</button>
+</form>
+{% endblock %}

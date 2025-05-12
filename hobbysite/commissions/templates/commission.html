@@ -35,14 +35,15 @@
         Open Slots: {{ job.open_slots }}<br>
     
         {% if user.is_authenticated %}
-            {% if job.open_slots|default:0 == 0 %}
-                <button type="submit" disabled>Apply to Job</button>
-            {% else %}
+            {% if job.open_slots > 0 %}
                 <form method="post" action="{% url 'commissions:job-apply' job.pk %}" style="display:inline;">
                     {% csrf_token %}
                     <button type="submit">Apply to Job</button>
                 </form>
+            {% else %}
+                <button type="submit" disabled>Apply to Job</button>
             {% endif %}
+            <p><a href="{% url 'commissions:commissions-update' commission.pk %}">Show all applicants</a></p>
         {% else %}
             <p><a href="{% url 'login' %}">Log in to apply</a></p>
         {% endif %}
@@ -54,7 +55,7 @@
 <p><strong>Total Manpower Required:</strong> {{ job_total_manpower_required }}</p>
 <p><strong>Total Open Slots:</strong> {{ job_total_open_slots }}</p>
 
-{% if user == commission.author %}
+{% if user.is_authenticated and user.profile == commission.author %}
 <a href="{% url 'commissions:commissions-update' commission.pk %}">Edit this Commission</a>
 {% endif %}
 
