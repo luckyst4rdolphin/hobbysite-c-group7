@@ -27,7 +27,7 @@
     {% endfor %}
     
     <h2>Read similar articles here:</h2>
-    {% for gen_category in categories %}
+    {% for gen_article in articles %}
         {% if article.category.name == gen_category.name and gen_article.title != article.title %}
             <li><a href='{{ gen_article.get_absolute_url }}'>{{ gen_article.title }}</a></li>
         {% endif %}
