@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
 
 {% block title %}My Cart{% endblock %}
+{% block header %}Merchandise Store{% endblock %}
 
 {% block content %}
-    <h1>My Cart</h1>
+    <h2>My Cart</h2>
     <ul>
         {% for item in cart_items %}
             <li>{{ item.product.name }} - Owner: {{ item.product.owner }}</li>

@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
 
 {% block title %}My Transactions{% endblock %}
+{% block header %}Merchandise Store{% endblock %}
 
 {% block content %}
-    <h1>My Transactions</h1>
+    <h2>My Transactions</h2>
     <ul>
         {% for item in transaction_items %}
             <li>{{ item.product.name }} - Buyer: {{ item.buyer }} <small><i>({{ item.created_on }})</i></small></li>
