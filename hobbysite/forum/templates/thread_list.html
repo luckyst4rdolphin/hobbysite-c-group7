@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<h2>Your Threads</h2>
+  		{% if user_threads %}
+    			{% for thread in user_threads %}
+      				<p><a href="{{ thread.get_absolute_url }}">{{ thread.title }}</a></p>
+    			{% endfor %}
+  		{% else %}
+    			<p>No threads created yet.</p>
+  		{% endif %}
+
+	<h2>All Threads by Category</h2>
+  	{% regroup all_threads by category as grouped_threads %}
+  	{% for group in grouped_threads %}
+    		<h3>{{ group.grouper.name }}</h3>
+    		{% for thread in group.list %}
+      			<p><a href="{{ thread.get_absolute_url }}">{{ thread.title }}</a></p>
+    		{% endfor %}
+  	{% empty %}
+    		<p>No threads available.</p>
+  	{% endfor %}
+
+	{% if user.is_authenticated %}
+		<a href="{% url 'forum:thread-create' %}" class="btn btn-primary">+ Create New Thread</a>
+	{% endif %}
+
+
+{% endblock %}
+

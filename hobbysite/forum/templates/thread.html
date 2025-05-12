@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title%}{{ thread.title }}{% endblock %}
+{% block content %}
+    <h1>{{ thread.title }}</h1>
+    <h2>Category: {{ thread.category }}</h2>
+    <h2>Date posted: {{ thread.created_on }}</h2>
+    <h2>Date edited: {{ thread.updated_on }}</h2>
+    <p>{{ thread.entry }}</p>
+    <h3>Related Posts</h3>
+    <ul>
+        {% for post in related_posts|slice:":5" %}
+            <li><a href="{% url 'forum:thread-detail' pk=post.pk %}">{{ post.title }}</a></li>
+	{% empty %}
+	    <p>No other posts in this category.</p>
+        {% endfor %}
+    </ul>
+
+    <h3>Comments</h3>
+    {% for comment in comments %}
+        <div class="comment">
+            <p><strong>{{ comment.author }}</strong> - {{ comment.created_on }}</p>
+            <p>{{ comment.content }}</p>
+        </div>
+    {% empty %}
+        <p>No comments yet. Be the first to comment!</p>
+    {% endfor %}
+
+    {% if user.is_authenticated %}
+        <h4>Leave a Comment</h4>
+        <form method="POST">
+            {% csrf_token %}
+            {{ comment_form.as_p }}
+            <button type="submit">Post Comment</button>
+        </form>
+    {% else %}
+        <p>You must be logged in to comment.</p>
+    {% endif %}
+
+    <p><a href="{{ back_to_list_url }}">Back to Thread List</a></p>
+
+    {% if user.is_authenticated and thread.author == user.profile %}
+        <a href="{% url 'forum:thread-edit' thread.id %}">Edit Thread</a>
+    {% endif %}
+
+{% endblock %}

@@ -1,25 +1,31 @@
 from django.db import models
 from django.urls import reverse
+from user_management.models import Profile
 
 
-class PostCategory(models.Model):
+class ThreadCategory(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
 
     class Meta:
         ordering = ['name']
-        verbose_name_plural = 'Post categories'
+        verbose_name_plural = 'Thread categories'
 
     def __str__(self):
         return self.name
 
 
-class Post(models.Model):
+class Thread(models.Model):
     title = models.CharField(max_length=255)
     category = models.ForeignKey(
-        PostCategory,
-        on_delete=models.SET_NULL,
-        null=True
+        ThreadCategory,
+        on_delete = models.SET_NULL,
+        null = True
+    )
+    author = models.ForeignKey(
+        Profile,
+        on_delete = models.SET_NULL,
+        null = True
     )
     entry = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
@@ -32,4 +38,22 @@ class Post(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('forum:post_showcase', args=[self.pk])
+        return reverse('forum:thread-detail', args=[self.pk])
+
+
+class Comment(models.Model):
+    author = models.ForeignKey(
+        Profile,
+        on_delete = models.SET_NULL,
+        null = True
+    )
+    thread = models.ForeignKey(
+        Thread,
+        on_delete = models.CASCADE
+    )
+    entry = models.TextField()
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['created_on']
