@@ -78,7 +78,7 @@ class Article(models.Model):
         @fn __str__
         @brief returns the title of the object
         '''
-        return self.title
+        return self.entry
     
     def get_absolute_url(self):
         '''
@@ -98,7 +98,7 @@ class Comment(models.Model):
 
     '''
     author = models.ForeignKey(
-        'profile.Profile',
+        'Profile',
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
@@ -125,16 +125,3 @@ class Comment(models.Model):
         '''
         ordering = ['created_on']
 
-    def __str__(self):
-        '''
-        @fn __str__
-        @brief returns the entry of the object
-        '''
-        return self.entry
-    
-    def get_absolute_url(self):
-        '''
-        @fn get_absolute_url
-        @brief returns url of the comment
-        '''
-        return reverse('wiki:article-comment', args=[self.pk])

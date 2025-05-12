@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import ModelFormMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from wiki.models import Article, ArticleCategory, Comment
-from .forms import ArticleCreateForm, ArticleUpdateForm, CommentForm
+from .forms import ArticleCreateForm, CommentForm
 from user_management.models import Profile
 from django.urls import reverse_lazy
 
@@ -91,7 +91,7 @@ class ArticleCreateView(LoginRequiredMixin, CreateView):
 
     '''    
     model = Article
-    template_name = 'article_form.html'
+    template_name = 'article_create_form.html'
     form_class = ArticleCreateForm
     success_url = reverse_lazy('wiki:article-list')
 
@@ -109,7 +109,7 @@ class ArticleCreateView(LoginRequiredMixin, CreateView):
         @brief returns the context for the article
         '''
         context = super(ArticleCreateView, self).get_context_data(**kwargs)
-        context['article_form'] = context['form']
+        context['article_create_form'] = context['form']
         return context
 
 class ArticleUpdateView(LoginRequiredMixin, UpdateView):
@@ -121,8 +121,8 @@ class ArticleUpdateView(LoginRequiredMixin, UpdateView):
 
     '''
     model = Article
-    template_name = 'article_update_form.html'
-    form_class = ArticleUpdateForm
+    template_name = 'article_create_form.html'
+    form_class = ArticleCreateForm
 
     def get_success_url(self):
         '''
@@ -145,5 +145,5 @@ class ArticleUpdateView(LoginRequiredMixin, UpdateView):
         @brief returns the context for the article
         '''
         context = super(ArticleUpdateView, self).get_context_data(**kwargs)
-        context['article_update_form'] = context['form']
+        context['article_create_form'] = context['form']
         return context

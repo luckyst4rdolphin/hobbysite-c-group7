@@ -22,8 +22,6 @@ class CommentInline(admin.StackedInline):
     '''
     model = Comment
 
-    list_display = ('author', 'article', 'entry', 'created_on', 'updated_on')
-
 class ArticleAdmin(admin.ModelAdmin):
     '''
     @authors : Antonth Chrisdale C. Lopez
@@ -33,7 +31,7 @@ class ArticleAdmin(admin.ModelAdmin):
     '''
     model = Article
 
-    list_display = ('title', 'author', 'category', 'entry', 'header_image', 'created_on', 'updated_on')
+    list_display = ('title', 'category', 'entry', 'header_image')
     inlines = [CommentInline,]
 
 admin.site.register(ArticleCategory, ArticleCategoryAdmin)

@@ -1,29 +1,12 @@
 from django import forms
 from .models import Article, Comment
- 
+
 class ArticleCreateForm(forms.ModelForm):
     '''
     @authors : Antonth Chrisdale C. Lopez
     
-    This class contains the form for creating Articles
-
-    '''
-    class Meta:
-        '''
-        @authors : Antonth Chrisdale C. Lopez
-    
-        This class contains the form for creating Articles
-
-        '''
-        model = Article
-        fields = "__all__"
-
-class ArticleUpdateForm(forms.ModelForm):
-    '''
-    @authors : Antonth Chrisdale C. Lopez
-    
-    This class contains the form for updating existing
-    Articles.
+    This class contains the form for creating Articles and
+    updating existing ones.
 
     '''
     class Meta:
@@ -35,7 +18,7 @@ class ArticleUpdateForm(forms.ModelForm):
 
         '''
         model = Article
-        fields = ['title', 'category', 'entry', 'header_image', 'updated_on']
+        fields = ['title', 'category', 'entry', 'header_image',]
 
 class CommentForm(forms.ModelForm):
     '''

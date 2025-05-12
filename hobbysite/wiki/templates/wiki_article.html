@@ -2,11 +2,10 @@
 
 {% block title %}Article{% endblock %}
 {% block content %}
+<a href="/blog/articles/"><button>To Article List</button></a>
     <h1>{{ article.title }}</h1>
     {% if article.author.name == user.profile.name %}
-        <div>
-            <a href="{{article.get_absolute_url}}edit"><button>Edit article</button></a>
-        </div>
+        <a href="{{article.get_absolute_url}}edit"><button>Edit article</button></a>
     {% endif %}
     <small>Written by: {{ article.author }} </small>
     <small>Created on: {{ article.created_on }}</small>
@@ -28,8 +27,8 @@
     {% endfor %}
     
     <h2>Read similar articles here:</h2>
-    {% for category in categories %}
-        {% if article.category.name == gen_category.name and article.title != gen_article.title %}
+    {% for gen_category in categories %}
+        {% if article.category.name == gen_category.name and gen_article.title != article.title %}
             <li><a href='{{ gen_article.get_absolute_url }}'>{{ gen_article.title }}</a></li>
         {% endif %}
     {% endfor %}
