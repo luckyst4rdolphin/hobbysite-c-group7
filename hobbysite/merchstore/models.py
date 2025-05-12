@@ -6,6 +6,7 @@ from user_management.models import Profile
 class ProductType(models.Model):
     '''
     Represents a category or type of product.
+    It has name and description.
     '''
     name = models.CharField(max_length = 255)
     description = models.TextField()
@@ -26,6 +27,7 @@ class ProductType(models.Model):
 class Product(models.Model):
     '''
     Represents an individual product belonging to a specific product type.
+    It has the following fields: name, product_type, owner, description, price, stock, and status.
     '''
     STATUS_CHOICES = [
         ("Available", "Available"),
@@ -47,7 +49,7 @@ class Product(models.Model):
     )
     description = models.TextField()
     price = models.DecimalField(max_digits = 50, decimal_places = 2)
-    stock = models.PositiveIntegerField(default=0)
+    stock = models.PositiveIntegerField(default = 0)
     status = models.CharField(
         max_length = 20,
         choices = STATUS_CHOICES,
@@ -70,9 +72,12 @@ class Product(models.Model):
         '''
         Returns the URL for the product's detail page.
         '''
-        return reverse('merchstore:merch_detail', args=[self.pk])
+        return reverse('merchstore:merch_detail', args = [self.pk])
     
     def save(self, *args, **kwargs):
+        '''
+        Automatically saves the product's status based on its stock before saving.
+        '''
         if self.stock == 0:
             self.status = "Out of Stock"
         else:
@@ -80,6 +85,10 @@ class Product(models.Model):
         super().save(*args, **kwargs)
     
 class Transaction(models.Model):
+    '''
+    Represents a transaction made by a buyer for a specific product.
+    It has the following fields: buyer, product, amount, status, and created on.
+    '''
     STATUS_CHOICES = [
         ("On cart", "On cart"),
         ("To Pay", "To Pay"),
