@@ -1,14 +1,18 @@
 {% extends 'base.html' %}
-{% load static %}
 
-{% block title%}Commission Category List{% endblock %}
 {% block content %}
 <h2>Commissions</h2>
 <ul>
     {% for commission in commissions %}
-        <li><a href="{{ commission.get_absolute_url }}">{{ commission.title }}</a></li>
-        <dd>People Required: {{ commission.people_required }}</dd>
-        <dd>Description: {{ commission.description }}</dd>
+    <li>
+        <strong>{{ commission.title }}</strong><br>
+        Required: {{ commission.people_required }} people<br>
+        Posted by: {{ commission.author.username }}<br>
+        Posted on: {{ commission.created_on|date:"M d, Y" }}<br>
+        <a href="{% url 'commissions:commissions-detail' commission.pk %}">View details</a>
+    </li>
+    {% empty %}
+    <li>No commissions available at the moment.</li>
     {% endfor %}
 </ul>
 {% endblock %}

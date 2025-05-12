@@ -46,7 +46,7 @@
 {% endwith %}
 
 {% if user == commission.author %}
-<a href="{% url 'commissions:commissions-edit' commission.pk %}">Edit this Commission</a>
+<a href="{% url 'commissions:commissions-update' commission.pk %}">Edit this Commission</a>
 {% endif %}
 
 {% endblock %}
