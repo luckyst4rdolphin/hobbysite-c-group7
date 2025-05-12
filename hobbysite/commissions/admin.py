@@ -1,20 +1,33 @@
 from django.contrib import admin
-from .models import Commission, Comment
+from .models import Commission, Job, JobApplication
 
-# Register your models here.
 class CommissionAdmin(admin.ModelAdmin):
     '''
-    Admin configurationn for the commission model.
+    Admin configuration for the Commission model.
     '''
     model = Commission
-    list_display = ('title', 'people_required', 'created_on', 'updated_on')
+    list_display = ('title', 'status', 'created_on', 'updated_on')
+    list_filter = ('status',)
+    search_fields = ('title', 'description')
 
-class CommentAdmin(admin.ModelAdmin):
+class JobAdmin(admin.ModelAdmin):
     '''
-    Admin configuration for the comment model.
+    Admin configuration for the Job model.
     '''
-    model = Comment
-    list_display = ('commission', 'entry', 'created_on', 'updated_on')
+    model = Job
+    list_display = ('commission', 'role', 'manpower_required', 'status')
+    list_filter = ('status', 'commission')
+    search_fields = ('role',)
+
+class JobApplicationAdmin(admin.ModelAdmin):
+    '''
+    Admin configuration for the JobApplication model.
+    '''
+    model = JobApplication
+    list_display = ('job', 'applicant', 'status', 'applied_on')
+    list_filter = ('status', 'job')
+    search_fields = ('applicant__user__username',)
 
 admin.site.register(Commission, CommissionAdmin)
-admin.site.register(Comment, CommentAdmin)
+admin.site.register(Job, JobAdmin)
+admin.site.register(JobApplication, JobApplicationAdmin)
