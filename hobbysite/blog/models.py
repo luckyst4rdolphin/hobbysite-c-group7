@@ -33,6 +33,7 @@ class Article(models.Model):
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
+        related_name="blog_articles"
     )
     header_image = models.ImageField(null=True, upload_to="images/")
     entry = models.TextField()

@@ -22,7 +22,8 @@ class Commission(models.Model):
         Profile,
         on_delete=models.CASCADE,
         null=True,
-        blank=True
+        blank=True,
+        related_name="commissions_author"
     )
 
     class Meta:

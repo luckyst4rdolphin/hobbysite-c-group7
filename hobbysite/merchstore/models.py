@@ -45,7 +45,8 @@ class Product(models.Model):
     owner = models.ForeignKey(
         Profile,
         null = True,
-        on_delete = models.CASCADE  
+        on_delete = models.CASCADE,
+        related_name = "product_owners" 
     )
     description = models.TextField()
     price = models.DecimalField(max_digits = 50, decimal_places = 2)
@@ -100,7 +101,8 @@ class Transaction(models.Model):
     buyer = models.ForeignKey(
         Profile,
         null = True,
-        on_delete = models.SET_NULL
+        on_delete = models.SET_NULL,
+        related_name = "product_buyers" 
     )
     product = models.ForeignKey(
         Product,
