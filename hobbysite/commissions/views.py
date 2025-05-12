@@ -42,7 +42,7 @@ class CommissionCreateView(LoginRequiredMixin, CreateView):
         form.instance.author = self.request.use.profile
         return super().form_valid(form)
 
-class CommissionUpdateView():
+class CommissionUpdateView(LoginRequiredMixin, UpdateView):
     model = Commission
     form_class = CommissionForm
     template_name = "commission_form.html"
